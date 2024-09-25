@@ -1,0 +1,557 @@
+------------------------
+states = 
+state 0:  items:    _startpolicy ->  . policy
+  actions:    action 'EOF' (noprec):   error
+    action 'NULL' (noprec):   shift 10
+    action 'COMMA' (noprec):   error
+    action 'COLON' (noprec):   error
+    action 'LBRACKET' (noprec):   shift 24
+    action 'RBRACKET' (noprec):   error
+    action 'LBRACE' (noprec):   shift 11
+    action 'RBRACE' (noprec):   error
+    action 'BOOLEAN' (noprec):   shift 9
+    action 'DOUBLE' (noprec):   shift 8
+    action 'INTEGER' (noprec):   shift 7
+    action 'STRING' (noprec):   shift 6
+    action 'IDENT' (noprec):   error
+    action 'error' (noprec):   error
+    action '#' (noprec):   error
+    action '$$' (noprec):   error
+  immediate action: <none>  gotos:    goto policy: 1
+    goto term: 2
+    goto object: 4
+    goto array: 5
+state 1:  items:    _startpolicy -> policy . 
+  actions:    action 'EOF' (noprec):   accept
+    action 'NULL' (noprec):   accept
+    action 'COMMA' (noprec):   accept
+    action 'COLON' (noprec):   accept
+    action 'LBRACKET' (noprec):   accept
+    action 'RBRACKET' (noprec):   accept
+    action 'LBRACE' (noprec):   accept
+    action 'RBRACE' (noprec):   accept
+    action 'BOOLEAN' (noprec):   accept
+    action 'DOUBLE' (noprec):   accept
+    action 'INTEGER' (noprec):   accept
+    action 'STRING' (noprec):   accept
+    action 'IDENT' (noprec):   accept
+    action 'error' (noprec):   accept
+    action '#' (noprec):   accept
+    action '$$' (noprec):   accept
+  immediate action:   accept  gotos:state 2:  items:    policy -> term . 'EOF'
+  actions:    action 'EOF' (noprec):   shift 3
+    action 'NULL' (noprec):   error
+    action 'COMMA' (noprec):   error
+    action 'COLON' (noprec):   error
+    action 'LBRACKET' (noprec):   error
+    action 'RBRACKET' (noprec):   error
+    action 'LBRACE' (noprec):   error
+    action 'RBRACE' (noprec):   error
+    action 'BOOLEAN' (noprec):   error
+    action 'DOUBLE' (noprec):   error
+    action 'INTEGER' (noprec):   error
+    action 'STRING' (noprec):   error
+    action 'IDENT' (noprec):   error
+    action 'error' (noprec):   error
+    action '#' (noprec):   error
+    action '$$' (noprec):   error
+  immediate action: <none>  gotos:state 3:  items:    policy -> term 'EOF' . 
+  actions:    action 'EOF' (noprec):   reduce policy --> term 'EOF'
+    action 'NULL' (noprec):   reduce policy --> term 'EOF'
+    action 'COMMA' (noprec):   reduce policy --> term 'EOF'
+    action 'COLON' (noprec):   reduce policy --> term 'EOF'
+    action 'LBRACKET' (noprec):   reduce policy --> term 'EOF'
+    action 'RBRACKET' (noprec):   reduce policy --> term 'EOF'
+    action 'LBRACE' (noprec):   reduce policy --> term 'EOF'
+    action 'RBRACE' (noprec):   reduce policy --> term 'EOF'
+    action 'BOOLEAN' (noprec):   reduce policy --> term 'EOF'
+    action 'DOUBLE' (noprec):   reduce policy --> term 'EOF'
+    action 'INTEGER' (noprec):   reduce policy --> term 'EOF'
+    action 'STRING' (noprec):   reduce policy --> term 'EOF'
+    action 'IDENT' (noprec):   reduce policy --> term 'EOF'
+    action 'error' (noprec):   reduce policy --> term 'EOF'
+    action '#' (noprec):   reduce policy --> term 'EOF'
+    action '$$' (noprec):   reduce policy --> term 'EOF'
+  immediate action:   reduce policy --> term 'EOF'  gotos:state 4:  items:    term -> object . 
+  actions:    action 'EOF' (noprec):   reduce term --> object
+    action 'NULL' (noprec):   reduce term --> object
+    action 'COMMA' (noprec):   reduce term --> object
+    action 'COLON' (noprec):   reduce term --> object
+    action 'LBRACKET' (noprec):   reduce term --> object
+    action 'RBRACKET' (noprec):   reduce term --> object
+    action 'LBRACE' (noprec):   reduce term --> object
+    action 'RBRACE' (noprec):   reduce term --> object
+    action 'BOOLEAN' (noprec):   reduce term --> object
+    action 'DOUBLE' (noprec):   reduce term --> object
+    action 'INTEGER' (noprec):   reduce term --> object
+    action 'STRING' (noprec):   reduce term --> object
+    action 'IDENT' (noprec):   reduce term --> object
+    action 'error' (noprec):   reduce term --> object
+    action '#' (noprec):   reduce term --> object
+    action '$$' (noprec):   reduce term --> object
+  immediate action:   reduce term --> object  gotos:state 5:  items:    term -> array . 
+  actions:    action 'EOF' (noprec):   reduce term --> array
+    action 'NULL' (noprec):   reduce term --> array
+    action 'COMMA' (noprec):   reduce term --> array
+    action 'COLON' (noprec):   reduce term --> array
+    action 'LBRACKET' (noprec):   reduce term --> array
+    action 'RBRACKET' (noprec):   reduce term --> array
+    action 'LBRACE' (noprec):   reduce term --> array
+    action 'RBRACE' (noprec):   reduce term --> array
+    action 'BOOLEAN' (noprec):   reduce term --> array
+    action 'DOUBLE' (noprec):   reduce term --> array
+    action 'INTEGER' (noprec):   reduce term --> array
+    action 'STRING' (noprec):   reduce term --> array
+    action 'IDENT' (noprec):   reduce term --> array
+    action 'error' (noprec):   reduce term --> array
+    action '#' (noprec):   reduce term --> array
+    action '$$' (noprec):   reduce term --> array
+  immediate action:   reduce term --> array  gotos:state 6:  items:    term -> 'STRING' . 
+  actions:    action 'EOF' (noprec):   reduce term --> 'STRING'
+    action 'NULL' (noprec):   reduce term --> 'STRING'
+    action 'COMMA' (noprec):   reduce term --> 'STRING'
+    action 'COLON' (noprec):   reduce term --> 'STRING'
+    action 'LBRACKET' (noprec):   reduce term --> 'STRING'
+    action 'RBRACKET' (noprec):   reduce term --> 'STRING'
+    action 'LBRACE' (noprec):   reduce term --> 'STRING'
+    action 'RBRACE' (noprec):   reduce term --> 'STRING'
+    action 'BOOLEAN' (noprec):   reduce term --> 'STRING'
+    action 'DOUBLE' (noprec):   reduce term --> 'STRING'
+    action 'INTEGER' (noprec):   reduce term --> 'STRING'
+    action 'STRING' (noprec):   reduce term --> 'STRING'
+    action 'IDENT' (noprec):   reduce term --> 'STRING'
+    action 'error' (noprec):   reduce term --> 'STRING'
+    action '#' (noprec):   reduce term --> 'STRING'
+    action '$$' (noprec):   reduce term --> 'STRING'
+  immediate action:   reduce term --> 'STRING'  gotos:state 7:  items:    term -> 'INTEGER' . 
+  actions:    action 'EOF' (noprec):   reduce term --> 'INTEGER'
+    action 'NULL' (noprec):   reduce term --> 'INTEGER'
+    action 'COMMA' (noprec):   reduce term --> 'INTEGER'
+    action 'COLON' (noprec):   reduce term --> 'INTEGER'
+    action 'LBRACKET' (noprec):   reduce term --> 'INTEGER'
+    action 'RBRACKET' (noprec):   reduce term --> 'INTEGER'
+    action 'LBRACE' (noprec):   reduce term --> 'INTEGER'
+    action 'RBRACE' (noprec):   reduce term --> 'INTEGER'
+    action 'BOOLEAN' (noprec):   reduce term --> 'INTEGER'
+    action 'DOUBLE' (noprec):   reduce term --> 'INTEGER'
+    action 'INTEGER' (noprec):   reduce term --> 'INTEGER'
+    action 'STRING' (noprec):   reduce term --> 'INTEGER'
+    action 'IDENT' (noprec):   reduce term --> 'INTEGER'
+    action 'error' (noprec):   reduce term --> 'INTEGER'
+    action '#' (noprec):   reduce term --> 'INTEGER'
+    action '$$' (noprec):   reduce term --> 'INTEGER'
+  immediate action:   reduce term --> 'INTEGER'  gotos:state 8:  items:    term -> 'DOUBLE' . 
+  actions:    action 'EOF' (noprec):   reduce term --> 'DOUBLE'
+    action 'NULL' (noprec):   reduce term --> 'DOUBLE'
+    action 'COMMA' (noprec):   reduce term --> 'DOUBLE'
+    action 'COLON' (noprec):   reduce term --> 'DOUBLE'
+    action 'LBRACKET' (noprec):   reduce term --> 'DOUBLE'
+    action 'RBRACKET' (noprec):   reduce term --> 'DOUBLE'
+    action 'LBRACE' (noprec):   reduce term --> 'DOUBLE'
+    action 'RBRACE' (noprec):   reduce term --> 'DOUBLE'
+    action 'BOOLEAN' (noprec):   reduce term --> 'DOUBLE'
+    action 'DOUBLE' (noprec):   reduce term --> 'DOUBLE'
+    action 'INTEGER' (noprec):   reduce term --> 'DOUBLE'
+    action 'STRING' (noprec):   reduce term --> 'DOUBLE'
+    action 'IDENT' (noprec):   reduce term --> 'DOUBLE'
+    action 'error' (noprec):   reduce term --> 'DOUBLE'
+    action '#' (noprec):   reduce term --> 'DOUBLE'
+    action '$$' (noprec):   reduce term --> 'DOUBLE'
+  immediate action:   reduce term --> 'DOUBLE'  gotos:state 9:  items:    term -> 'BOOLEAN' . 
+  actions:    action 'EOF' (noprec):   reduce term --> 'BOOLEAN'
+    action 'NULL' (noprec):   reduce term --> 'BOOLEAN'
+    action 'COMMA' (noprec):   reduce term --> 'BOOLEAN'
+    action 'COLON' (noprec):   reduce term --> 'BOOLEAN'
+    action 'LBRACKET' (noprec):   reduce term --> 'BOOLEAN'
+    action 'RBRACKET' (noprec):   reduce term --> 'BOOLEAN'
+    action 'LBRACE' (noprec):   reduce term --> 'BOOLEAN'
+    action 'RBRACE' (noprec):   reduce term --> 'BOOLEAN'
+    action 'BOOLEAN' (noprec):   reduce term --> 'BOOLEAN'
+    action 'DOUBLE' (noprec):   reduce term --> 'BOOLEAN'
+    action 'INTEGER' (noprec):   reduce term --> 'BOOLEAN'
+    action 'STRING' (noprec):   reduce term --> 'BOOLEAN'
+    action 'IDENT' (noprec):   reduce term --> 'BOOLEAN'
+    action 'error' (noprec):   reduce term --> 'BOOLEAN'
+    action '#' (noprec):   reduce term --> 'BOOLEAN'
+    action '$$' (noprec):   reduce term --> 'BOOLEAN'
+  immediate action:   reduce term --> 'BOOLEAN'  gotos:state 10:  items:    term -> 'NULL' . 
+  actions:    action 'EOF' (noprec):   reduce term --> 'NULL'
+    action 'NULL' (noprec):   reduce term --> 'NULL'
+    action 'COMMA' (noprec):   reduce term --> 'NULL'
+    action 'COLON' (noprec):   reduce term --> 'NULL'
+    action 'LBRACKET' (noprec):   reduce term --> 'NULL'
+    action 'RBRACKET' (noprec):   reduce term --> 'NULL'
+    action 'LBRACE' (noprec):   reduce term --> 'NULL'
+    action 'RBRACE' (noprec):   reduce term --> 'NULL'
+    action 'BOOLEAN' (noprec):   reduce term --> 'NULL'
+    action 'DOUBLE' (noprec):   reduce term --> 'NULL'
+    action 'INTEGER' (noprec):   reduce term --> 'NULL'
+    action 'STRING' (noprec):   reduce term --> 'NULL'
+    action 'IDENT' (noprec):   reduce term --> 'NULL'
+    action 'error' (noprec):   reduce term --> 'NULL'
+    action '#' (noprec):   reduce term --> 'NULL'
+    action '$$' (noprec):   reduce term --> 'NULL'
+  immediate action:   reduce term --> 'NULL'  gotos:state 11:  items:    object -> 'LBRACE' . 'RBRACE'
+    object -> 'LBRACE' . members 'RBRACE'
+  actions:    action 'EOF' (noprec):   error
+    action 'NULL' (noprec):   error
+    action 'COMMA' (noprec):   error
+    action 'COLON' (noprec):   error
+    action 'LBRACKET' (noprec):   error
+    action 'RBRACKET' (noprec):   error
+    action 'LBRACE' (noprec):   error
+    action 'RBRACE' (noprec):   shift 12
+    action 'BOOLEAN' (noprec):   error
+    action 'DOUBLE' (noprec):   error
+    action 'INTEGER' (noprec):   error
+    action 'STRING' (noprec):   shift 18
+    action 'IDENT' (noprec):   shift 21
+    action 'error' (noprec):   error
+    action '#' (noprec):   error
+    action '$$' (noprec):   error
+  immediate action: <none>  gotos:    goto members: 13
+    goto member: 15
+state 12:  items:    object -> 'LBRACE' 'RBRACE' . 
+  actions:    action 'EOF' (noprec):   reduce object --> 'LBRACE' 'RBRACE'
+    action 'NULL' (noprec):   reduce object --> 'LBRACE' 'RBRACE'
+    action 'COMMA' (noprec):   reduce object --> 'LBRACE' 'RBRACE'
+    action 'COLON' (noprec):   reduce object --> 'LBRACE' 'RBRACE'
+    action 'LBRACKET' (noprec):   reduce object --> 'LBRACE' 'RBRACE'
+    action 'RBRACKET' (noprec):   reduce object --> 'LBRACE' 'RBRACE'
+    action 'LBRACE' (noprec):   reduce object --> 'LBRACE' 'RBRACE'
+    action 'RBRACE' (noprec):   reduce object --> 'LBRACE' 'RBRACE'
+    action 'BOOLEAN' (noprec):   reduce object --> 'LBRACE' 'RBRACE'
+    action 'DOUBLE' (noprec):   reduce object --> 'LBRACE' 'RBRACE'
+    action 'INTEGER' (noprec):   reduce object --> 'LBRACE' 'RBRACE'
+    action 'STRING' (noprec):   reduce object --> 'LBRACE' 'RBRACE'
+    action 'IDENT' (noprec):   reduce object --> 'LBRACE' 'RBRACE'
+    action 'error' (noprec):   reduce object --> 'LBRACE' 'RBRACE'
+    action '#' (noprec):   reduce object --> 'LBRACE' 'RBRACE'
+    action '$$' (noprec):   reduce object --> 'LBRACE' 'RBRACE'
+  immediate action:   reduce object --> 'LBRACE' 'RBRACE'  gotos:state 13:  items:    object -> 'LBRACE' members . 'RBRACE'
+    members -> members . 'COMMA' member
+  actions:    action 'EOF' (noprec):   error
+    action 'NULL' (noprec):   error
+    action 'COMMA' (noprec):   shift 16
+    action 'COLON' (noprec):   error
+    action 'LBRACKET' (noprec):   error
+    action 'RBRACKET' (noprec):   error
+    action 'LBRACE' (noprec):   error
+    action 'RBRACE' (noprec):   shift 14
+    action 'BOOLEAN' (noprec):   error
+    action 'DOUBLE' (noprec):   error
+    action 'INTEGER' (noprec):   error
+    action 'STRING' (noprec):   error
+    action 'IDENT' (noprec):   error
+    action 'error' (noprec):   error
+    action '#' (noprec):   error
+    action '$$' (noprec):   error
+  immediate action: <none>  gotos:state 14:  items:    object -> 'LBRACE' members 'RBRACE' . 
+  actions:    action 'EOF' (noprec):   reduce object --> 'LBRACE' members 'RBRACE'
+    action 'NULL' (noprec):   reduce object --> 'LBRACE' members 'RBRACE'
+    action 'COMMA' (noprec):   reduce object --> 'LBRACE' members 'RBRACE'
+    action 'COLON' (noprec):   reduce object --> 'LBRACE' members 'RBRACE'
+    action 'LBRACKET' (noprec):   reduce object --> 'LBRACE' members 'RBRACE'
+    action 'RBRACKET' (noprec):   reduce object --> 'LBRACE' members 'RBRACE'
+    action 'LBRACE' (noprec):   reduce object --> 'LBRACE' members 'RBRACE'
+    action 'RBRACE' (noprec):   reduce object --> 'LBRACE' members 'RBRACE'
+    action 'BOOLEAN' (noprec):   reduce object --> 'LBRACE' members 'RBRACE'
+    action 'DOUBLE' (noprec):   reduce object --> 'LBRACE' members 'RBRACE'
+    action 'INTEGER' (noprec):   reduce object --> 'LBRACE' members 'RBRACE'
+    action 'STRING' (noprec):   reduce object --> 'LBRACE' members 'RBRACE'
+    action 'IDENT' (noprec):   reduce object --> 'LBRACE' members 'RBRACE'
+    action 'error' (noprec):   reduce object --> 'LBRACE' members 'RBRACE'
+    action '#' (noprec):   reduce object --> 'LBRACE' members 'RBRACE'
+    action '$$' (noprec):   reduce object --> 'LBRACE' members 'RBRACE'
+  immediate action:   reduce object --> 'LBRACE' members 'RBRACE'  gotos:state 15:  items:    members -> member . 
+  actions:    action 'EOF' (noprec):   reduce members --> member
+    action 'NULL' (noprec):   reduce members --> member
+    action 'COMMA' (noprec):   reduce members --> member
+    action 'COLON' (noprec):   reduce members --> member
+    action 'LBRACKET' (noprec):   reduce members --> member
+    action 'RBRACKET' (noprec):   reduce members --> member
+    action 'LBRACE' (noprec):   reduce members --> member
+    action 'RBRACE' (noprec):   reduce members --> member
+    action 'BOOLEAN' (noprec):   reduce members --> member
+    action 'DOUBLE' (noprec):   reduce members --> member
+    action 'INTEGER' (noprec):   reduce members --> member
+    action 'STRING' (noprec):   reduce members --> member
+    action 'IDENT' (noprec):   reduce members --> member
+    action 'error' (noprec):   reduce members --> member
+    action '#' (noprec):   reduce members --> member
+    action '$$' (noprec):   reduce members --> member
+  immediate action:   reduce members --> member  gotos:state 16:  items:    members -> members 'COMMA' . member
+  actions:    action 'EOF' (noprec):   error
+    action 'NULL' (noprec):   error
+    action 'COMMA' (noprec):   error
+    action 'COLON' (noprec):   error
+    action 'LBRACKET' (noprec):   error
+    action 'RBRACKET' (noprec):   error
+    action 'LBRACE' (noprec):   error
+    action 'RBRACE' (noprec):   error
+    action 'BOOLEAN' (noprec):   error
+    action 'DOUBLE' (noprec):   error
+    action 'INTEGER' (noprec):   error
+    action 'STRING' (noprec):   shift 18
+    action 'IDENT' (noprec):   shift 21
+    action 'error' (noprec):   error
+    action '#' (noprec):   error
+    action '$$' (noprec):   error
+  immediate action: <none>  gotos:    goto member: 17
+state 17:  items:    members -> members 'COMMA' member . 
+  actions:    action 'EOF' (noprec):   reduce members --> members 'COMMA' member
+    action 'NULL' (noprec):   reduce members --> members 'COMMA' member
+    action 'COMMA' (noprec):   reduce members --> members 'COMMA' member
+    action 'COLON' (noprec):   reduce members --> members 'COMMA' member
+    action 'LBRACKET' (noprec):   reduce members --> members 'COMMA' member
+    action 'RBRACKET' (noprec):   reduce members --> members 'COMMA' member
+    action 'LBRACE' (noprec):   reduce members --> members 'COMMA' member
+    action 'RBRACE' (noprec):   reduce members --> members 'COMMA' member
+    action 'BOOLEAN' (noprec):   reduce members --> members 'COMMA' member
+    action 'DOUBLE' (noprec):   reduce members --> members 'COMMA' member
+    action 'INTEGER' (noprec):   reduce members --> members 'COMMA' member
+    action 'STRING' (noprec):   reduce members --> members 'COMMA' member
+    action 'IDENT' (noprec):   reduce members --> members 'COMMA' member
+    action 'error' (noprec):   reduce members --> members 'COMMA' member
+    action '#' (noprec):   reduce members --> members 'COMMA' member
+    action '$$' (noprec):   reduce members --> members 'COMMA' member
+  immediate action:   reduce members --> members 'COMMA' member  gotos:state 18:  items:    member -> 'STRING' . 'COLON' term
+  actions:    action 'EOF' (noprec):   error
+    action 'NULL' (noprec):   error
+    action 'COMMA' (noprec):   error
+    action 'COLON' (noprec):   shift 19
+    action 'LBRACKET' (noprec):   error
+    action 'RBRACKET' (noprec):   error
+    action 'LBRACE' (noprec):   error
+    action 'RBRACE' (noprec):   error
+    action 'BOOLEAN' (noprec):   error
+    action 'DOUBLE' (noprec):   error
+    action 'INTEGER' (noprec):   error
+    action 'STRING' (noprec):   error
+    action 'IDENT' (noprec):   error
+    action 'error' (noprec):   error
+    action '#' (noprec):   error
+    action '$$' (noprec):   error
+  immediate action: <none>  gotos:state 19:  items:    member -> 'STRING' 'COLON' . term
+  actions:    action 'EOF' (noprec):   error
+    action 'NULL' (noprec):   shift 10
+    action 'COMMA' (noprec):   error
+    action 'COLON' (noprec):   error
+    action 'LBRACKET' (noprec):   shift 24
+    action 'RBRACKET' (noprec):   error
+    action 'LBRACE' (noprec):   shift 11
+    action 'RBRACE' (noprec):   error
+    action 'BOOLEAN' (noprec):   shift 9
+    action 'DOUBLE' (noprec):   shift 8
+    action 'INTEGER' (noprec):   shift 7
+    action 'STRING' (noprec):   shift 6
+    action 'IDENT' (noprec):   error
+    action 'error' (noprec):   error
+    action '#' (noprec):   error
+    action '$$' (noprec):   error
+  immediate action: <none>  gotos:    goto term: 20
+    goto object: 4
+    goto array: 5
+state 20:  items:    member -> 'STRING' 'COLON' term . 
+  actions:    action 'EOF' (noprec):   reduce member --> 'STRING' 'COLON' term
+    action 'NULL' (noprec):   reduce member --> 'STRING' 'COLON' term
+    action 'COMMA' (noprec):   reduce member --> 'STRING' 'COLON' term
+    action 'COLON' (noprec):   reduce member --> 'STRING' 'COLON' term
+    action 'LBRACKET' (noprec):   reduce member --> 'STRING' 'COLON' term
+    action 'RBRACKET' (noprec):   reduce member --> 'STRING' 'COLON' term
+    action 'LBRACE' (noprec):   reduce member --> 'STRING' 'COLON' term
+    action 'RBRACE' (noprec):   reduce member --> 'STRING' 'COLON' term
+    action 'BOOLEAN' (noprec):   reduce member --> 'STRING' 'COLON' term
+    action 'DOUBLE' (noprec):   reduce member --> 'STRING' 'COLON' term
+    action 'INTEGER' (noprec):   reduce member --> 'STRING' 'COLON' term
+    action 'STRING' (noprec):   reduce member --> 'STRING' 'COLON' term
+    action 'IDENT' (noprec):   reduce member --> 'STRING' 'COLON' term
+    action 'error' (noprec):   reduce member --> 'STRING' 'COLON' term
+    action '#' (noprec):   reduce member --> 'STRING' 'COLON' term
+    action '$$' (noprec):   reduce member --> 'STRING' 'COLON' term
+  immediate action:   reduce member --> 'STRING' 'COLON' term  gotos:state 21:  items:    member -> 'IDENT' . 'COLON' term
+  actions:    action 'EOF' (noprec):   error
+    action 'NULL' (noprec):   error
+    action 'COMMA' (noprec):   error
+    action 'COLON' (noprec):   shift 22
+    action 'LBRACKET' (noprec):   error
+    action 'RBRACKET' (noprec):   error
+    action 'LBRACE' (noprec):   error
+    action 'RBRACE' (noprec):   error
+    action 'BOOLEAN' (noprec):   error
+    action 'DOUBLE' (noprec):   error
+    action 'INTEGER' (noprec):   error
+    action 'STRING' (noprec):   error
+    action 'IDENT' (noprec):   error
+    action 'error' (noprec):   error
+    action '#' (noprec):   error
+    action '$$' (noprec):   error
+  immediate action: <none>  gotos:state 22:  items:    member -> 'IDENT' 'COLON' . term
+  actions:    action 'EOF' (noprec):   error
+    action 'NULL' (noprec):   shift 10
+    action 'COMMA' (noprec):   error
+    action 'COLON' (noprec):   error
+    action 'LBRACKET' (noprec):   shift 24
+    action 'RBRACKET' (noprec):   error
+    action 'LBRACE' (noprec):   shift 11
+    action 'RBRACE' (noprec):   error
+    action 'BOOLEAN' (noprec):   shift 9
+    action 'DOUBLE' (noprec):   shift 8
+    action 'INTEGER' (noprec):   shift 7
+    action 'STRING' (noprec):   shift 6
+    action 'IDENT' (noprec):   error
+    action 'error' (noprec):   error
+    action '#' (noprec):   error
+    action '$$' (noprec):   error
+  immediate action: <none>  gotos:    goto term: 23
+    goto object: 4
+    goto array: 5
+state 23:  items:    member -> 'IDENT' 'COLON' term . 
+  actions:    action 'EOF' (noprec):   reduce member --> 'IDENT' 'COLON' term
+    action 'NULL' (noprec):   reduce member --> 'IDENT' 'COLON' term
+    action 'COMMA' (noprec):   reduce member --> 'IDENT' 'COLON' term
+    action 'COLON' (noprec):   reduce member --> 'IDENT' 'COLON' term
+    action 'LBRACKET' (noprec):   reduce member --> 'IDENT' 'COLON' term
+    action 'RBRACKET' (noprec):   reduce member --> 'IDENT' 'COLON' term
+    action 'LBRACE' (noprec):   reduce member --> 'IDENT' 'COLON' term
+    action 'RBRACE' (noprec):   reduce member --> 'IDENT' 'COLON' term
+    action 'BOOLEAN' (noprec):   reduce member --> 'IDENT' 'COLON' term
+    action 'DOUBLE' (noprec):   reduce member --> 'IDENT' 'COLON' term
+    action 'INTEGER' (noprec):   reduce member --> 'IDENT' 'COLON' term
+    action 'STRING' (noprec):   reduce member --> 'IDENT' 'COLON' term
+    action 'IDENT' (noprec):   reduce member --> 'IDENT' 'COLON' term
+    action 'error' (noprec):   reduce member --> 'IDENT' 'COLON' term
+    action '#' (noprec):   reduce member --> 'IDENT' 'COLON' term
+    action '$$' (noprec):   reduce member --> 'IDENT' 'COLON' term
+  immediate action:   reduce member --> 'IDENT' 'COLON' term  gotos:state 24:  items:    array -> 'LBRACKET' . 'RBRACKET'
+    array -> 'LBRACKET' . elements 'RBRACKET'
+  actions:    action 'EOF' (noprec):   error
+    action 'NULL' (noprec):   shift 10
+    action 'COMMA' (noprec):   error
+    action 'COLON' (noprec):   error
+    action 'LBRACKET' (noprec):   shift 24
+    action 'RBRACKET' (noprec):   shift 25
+    action 'LBRACE' (noprec):   shift 11
+    action 'RBRACE' (noprec):   error
+    action 'BOOLEAN' (noprec):   shift 9
+    action 'DOUBLE' (noprec):   shift 8
+    action 'INTEGER' (noprec):   shift 7
+    action 'STRING' (noprec):   shift 6
+    action 'IDENT' (noprec):   error
+    action 'error' (noprec):   error
+    action '#' (noprec):   error
+    action '$$' (noprec):   error
+  immediate action: <none>  gotos:    goto term: 28
+    goto object: 4
+    goto array: 5
+    goto elements: 26
+state 25:  items:    array -> 'LBRACKET' 'RBRACKET' . 
+  actions:    action 'EOF' (noprec):   reduce array --> 'LBRACKET' 'RBRACKET'
+    action 'NULL' (noprec):   reduce array --> 'LBRACKET' 'RBRACKET'
+    action 'COMMA' (noprec):   reduce array --> 'LBRACKET' 'RBRACKET'
+    action 'COLON' (noprec):   reduce array --> 'LBRACKET' 'RBRACKET'
+    action 'LBRACKET' (noprec):   reduce array --> 'LBRACKET' 'RBRACKET'
+    action 'RBRACKET' (noprec):   reduce array --> 'LBRACKET' 'RBRACKET'
+    action 'LBRACE' (noprec):   reduce array --> 'LBRACKET' 'RBRACKET'
+    action 'RBRACE' (noprec):   reduce array --> 'LBRACKET' 'RBRACKET'
+    action 'BOOLEAN' (noprec):   reduce array --> 'LBRACKET' 'RBRACKET'
+    action 'DOUBLE' (noprec):   reduce array --> 'LBRACKET' 'RBRACKET'
+    action 'INTEGER' (noprec):   reduce array --> 'LBRACKET' 'RBRACKET'
+    action 'STRING' (noprec):   reduce array --> 'LBRACKET' 'RBRACKET'
+    action 'IDENT' (noprec):   reduce array --> 'LBRACKET' 'RBRACKET'
+    action 'error' (noprec):   reduce array --> 'LBRACKET' 'RBRACKET'
+    action '#' (noprec):   reduce array --> 'LBRACKET' 'RBRACKET'
+    action '$$' (noprec):   reduce array --> 'LBRACKET' 'RBRACKET'
+  immediate action:   reduce array --> 'LBRACKET' 'RBRACKET'  gotos:state 26:  items:    array -> 'LBRACKET' elements . 'RBRACKET'
+    elements -> elements . 'COMMA' term
+  actions:    action 'EOF' (noprec):   error
+    action 'NULL' (noprec):   error
+    action 'COMMA' (noprec):   shift 29
+    action 'COLON' (noprec):   error
+    action 'LBRACKET' (noprec):   error
+    action 'RBRACKET' (noprec):   shift 27
+    action 'LBRACE' (noprec):   error
+    action 'RBRACE' (noprec):   error
+    action 'BOOLEAN' (noprec):   error
+    action 'DOUBLE' (noprec):   error
+    action 'INTEGER' (noprec):   error
+    action 'STRING' (noprec):   error
+    action 'IDENT' (noprec):   error
+    action 'error' (noprec):   error
+    action '#' (noprec):   error
+    action '$$' (noprec):   error
+  immediate action: <none>  gotos:state 27:  items:    array -> 'LBRACKET' elements 'RBRACKET' . 
+  actions:    action 'EOF' (noprec):   reduce array --> 'LBRACKET' elements 'RBRACKET'
+    action 'NULL' (noprec):   reduce array --> 'LBRACKET' elements 'RBRACKET'
+    action 'COMMA' (noprec):   reduce array --> 'LBRACKET' elements 'RBRACKET'
+    action 'COLON' (noprec):   reduce array --> 'LBRACKET' elements 'RBRACKET'
+    action 'LBRACKET' (noprec):   reduce array --> 'LBRACKET' elements 'RBRACKET'
+    action 'RBRACKET' (noprec):   reduce array --> 'LBRACKET' elements 'RBRACKET'
+    action 'LBRACE' (noprec):   reduce array --> 'LBRACKET' elements 'RBRACKET'
+    action 'RBRACE' (noprec):   reduce array --> 'LBRACKET' elements 'RBRACKET'
+    action 'BOOLEAN' (noprec):   reduce array --> 'LBRACKET' elements 'RBRACKET'
+    action 'DOUBLE' (noprec):   reduce array --> 'LBRACKET' elements 'RBRACKET'
+    action 'INTEGER' (noprec):   reduce array --> 'LBRACKET' elements 'RBRACKET'
+    action 'STRING' (noprec):   reduce array --> 'LBRACKET' elements 'RBRACKET'
+    action 'IDENT' (noprec):   reduce array --> 'LBRACKET' elements 'RBRACKET'
+    action 'error' (noprec):   reduce array --> 'LBRACKET' elements 'RBRACKET'
+    action '#' (noprec):   reduce array --> 'LBRACKET' elements 'RBRACKET'
+    action '$$' (noprec):   reduce array --> 'LBRACKET' elements 'RBRACKET'
+  immediate action:   reduce array --> 'LBRACKET' elements 'RBRACKET'  gotos:state 28:  items:    elements -> term . 
+  actions:    action 'EOF' (noprec):   reduce elements --> term
+    action 'NULL' (noprec):   reduce elements --> term
+    action 'COMMA' (noprec):   reduce elements --> term
+    action 'COLON' (noprec):   reduce elements --> term
+    action 'LBRACKET' (noprec):   reduce elements --> term
+    action 'RBRACKET' (noprec):   reduce elements --> term
+    action 'LBRACE' (noprec):   reduce elements --> term
+    action 'RBRACE' (noprec):   reduce elements --> term
+    action 'BOOLEAN' (noprec):   reduce elements --> term
+    action 'DOUBLE' (noprec):   reduce elements --> term
+    action 'INTEGER' (noprec):   reduce elements --> term
+    action 'STRING' (noprec):   reduce elements --> term
+    action 'IDENT' (noprec):   reduce elements --> term
+    action 'error' (noprec):   reduce elements --> term
+    action '#' (noprec):   reduce elements --> term
+    action '$$' (noprec):   reduce elements --> term
+  immediate action:   reduce elements --> term  gotos:state 29:  items:    elements -> elements 'COMMA' . term
+  actions:    action 'EOF' (noprec):   error
+    action 'NULL' (noprec):   shift 10
+    action 'COMMA' (noprec):   error
+    action 'COLON' (noprec):   error
+    action 'LBRACKET' (noprec):   shift 24
+    action 'RBRACKET' (noprec):   error
+    action 'LBRACE' (noprec):   shift 11
+    action 'RBRACE' (noprec):   error
+    action 'BOOLEAN' (noprec):   shift 9
+    action 'DOUBLE' (noprec):   shift 8
+    action 'INTEGER' (noprec):   shift 7
+    action 'STRING' (noprec):   shift 6
+    action 'IDENT' (noprec):   error
+    action 'error' (noprec):   error
+    action '#' (noprec):   error
+    action '$$' (noprec):   error
+  immediate action: <none>  gotos:    goto term: 30
+    goto object: 4
+    goto array: 5
+state 30:  items:    elements -> elements 'COMMA' term . 
+  actions:    action 'EOF' (noprec):   reduce elements --> elements 'COMMA' term
+    action 'NULL' (noprec):   reduce elements --> elements 'COMMA' term
+    action 'COMMA' (noprec):   reduce elements --> elements 'COMMA' term
+    action 'COLON' (noprec):   reduce elements --> elements 'COMMA' term
+    action 'LBRACKET' (noprec):   reduce elements --> elements 'COMMA' term
+    action 'RBRACKET' (noprec):   reduce elements --> elements 'COMMA' term
+    action 'LBRACE' (noprec):   reduce elements --> elements 'COMMA' term
+    action 'RBRACE' (noprec):   reduce elements --> elements 'COMMA' term
+    action 'BOOLEAN' (noprec):   reduce elements --> elements 'COMMA' term
+    action 'DOUBLE' (noprec):   reduce elements --> elements 'COMMA' term
+    action 'INTEGER' (noprec):   reduce elements --> elements 'COMMA' term
+    action 'STRING' (noprec):   reduce elements --> elements 'COMMA' term
+    action 'IDENT' (noprec):   reduce elements --> elements 'COMMA' term
+    action 'error' (noprec):   reduce elements --> elements 'COMMA' term
+    action '#' (noprec):   reduce elements --> elements 'COMMA' term
+    action '$$' (noprec):   reduce elements --> elements 'COMMA' term
+  immediate action:   reduce elements --> elements 'COMMA' term  gotos:
+startStates = 0
+------------------------
+        Output file describing compiled parser placed in Grammar.fs and Grammar.fsi

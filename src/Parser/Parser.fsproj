@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Lexer.fsl" />
+    <FsYacc Include="Grammar.fsy">
+      <OtherFlags>--module MobileOwnership.PolicyText.Grammar --internal -v</OtherFlags>
+    </FsYacc>
+    <Compile Include="Grammar.fs" />
+    <FsLex Include="Lexer.fsl">
+      <OtherFlags>--module MobileOwnership.PolicyText.Lexer --unicode --internal</OtherFlags>
+    </FsLex>
+    <Compile Include="Lexer.fs" />
+    <Compile Include="Parser.fs" />
+  </ItemGroup>
+
+  <ItemGroup />
+
+  <ItemGroup>
+    <PackageReference Include="FsLexYacc" Version="11.3.0" />
+  </ItemGroup>
+
+</Project>

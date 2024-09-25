@@ -1,0 +1,82 @@
+﻿{
+// Copyright (c) Mobile Ownership, mobileownership.org.  All Rights Reserved.  See LICENSE.txt in the project root for license information.
+
+open System
+open FSharp.Text.Lexing
+open MobileOwnership.PolicyText.Grammar
+
+let lexeme = LexBuffer<_>.LexemeString
+
+let newline (lexbuf: LexBuffer<_>) = 
+    lexbuf.EndPos <- lexbuf.StartPos.NextLine
+
+let tokenInteger (lexbuf: LexBuffer<_>) =
+    let i = System.Int64.Parse(lexeme lexbuf)
+    INTEGER(i)
+
+let tokenDouble (lexbuf: LexBuffer<_>) =
+    let s = lexeme lexbuf
+    let d = 
+        if s.EndsWith('f') then
+            System.Double.Parse(s.Substring(0, s.Length - 1))
+        else
+            System.Double.Parse(s)
+    DOUBLE(d)
+
+let identOrKeyword (text: string) =
+    match text with
+    | "false"   -> BOOLEAN(false)
+    | "true"    -> BOOLEAN(true)
+    | "null"    -> NULL
+    | _         -> IDENT(text)
+
+}
+
+
+let whitespace = [' ''\n''\r''\t']*
+let sign = ['+''-']?
+let onenine = ['1'-'9']
+let digit = ['0'-'9']
+let digits = digit+
+let exponent = (['E''e'] sign digits)?
+let fraction = ('.' digits)?
+let integer = digit | (onenine digits) | ('-' digit) | ('-' onenine digits)
+let number = integer fraction exponent
+let hex = digit | ['A'-'F'] | ['a'-'f']
+let escape = ['\"''\\''/''b''f''n''r''t'] | 'u' hex hex hex hex
+let character = 
+    [^
+        '\u0000''\u0001''\u0002''\u0003''\u0004''\u0005''\u0006''\u0007'
+        '\u0008''\u0009''\u000a''\u000b''\u000c''\u000d''\u000e''\u000f'
+        '\u0010''\u0011''\u0012''\u0013''\u0014''\u0015''\u0016''\u0017'
+        '\u0010''\u0011''\u001a''\u001b''\u001c''\u001d''\u001e''\u001f'
+        '\"''\\'
+    ] | '\\' escape
+let characters = (character+)?
+let string = '\"' characters '\"'
+
+let digit_char = ['0'-'9']
+let letter_char = '\Lu' | '\Ll' | '\Lt' | '\Lm' | '\Lo' | '\Nl'
+let connecting_char = '\Pc'
+let combining_char = '\Mn' | '\Mc'
+let formatting_char = '\Cf'
+
+let ident_start_char = letter_char | '_'
+let ident_char = letter_char | digit_char | connecting_char | combining_char | formatting_char | ['\'' '_']
+let ident_text = ident_start_char ident_char*
+let ident = ident_text | "``" ( [^'`' '\n' '\r' '\t'] | '`' [^ '`' '\n' '\r' '\t'] )+ "``"
+
+rule policy = parse
+| ","                           { COMMA }
+| ":"                           { COLON }
+| "["                           { LBRACKET }
+| "]"                           { RBRACKET }
+| "{"                           { LBRACE }
+| "}"                           { RBRACE }
+| integer                       { tokenInteger lexbuf }
+| number                        { tokenDouble lexbuf }
+| string                        { STRING(lexeme lexbuf) }
+| ident                         { identOrKeyword (lexeme lexbuf) }
+| whitespace                    { policy lexbuf }
+| eof                           { EOF }
+| _                             { failwith ("ParseError" + LexBuffer<_>.LexemeString lexbuf) }

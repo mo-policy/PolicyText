@@ -1,0 +1,54 @@
+﻿%{
+// Copyright (c) Mobile Ownership, mobileownership.org.  All Rights Reserved.  See LICENSE.txt in the project root for license information.
+
+open System
+
+%}
+
+%start policy
+
+%token <string> IDENT
+%token <string> STRING
+%token <int64> INTEGER
+%token <double> DOUBLE 
+%token <bool> BOOLEAN
+%token NULL COMMA COLON LBRACKET RBRACKET LBRACE RBRACE
+%token EOF
+
+%type <int> policy
+
+
+%%
+
+policy:
+    | term EOF                      { 1 }
+
+term: 
+    | object                        { $1 } 
+    | array                         { $1 }
+    | STRING                        { 2 }
+    | INTEGER                       { 3 }
+    | DOUBLE                        { 4 }
+    | BOOLEAN                       { 5 }
+    | NULL                          { 6 }
+
+object: 
+    | LBRACE RBRACE                 { 7 }
+    | LBRACE members RBRACE         { $2 }
+
+members:
+    | member                        { 8 }
+    | members COMMA member          { $3 }
+
+member:
+    | STRING COLON term             { 9 }
+    | IDENT COLON term              { 10 }
+
+array:
+    | LBRACKET RBRACKET             { 11 }
+    | LBRACKET elements RBRACKET    { $2 }
+    
+elements:
+    | term                          { 12 }
+    | elements COMMA term           { 13 }
+    
