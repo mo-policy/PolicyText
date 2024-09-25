@@ -2,6 +2,7 @@
 // Copyright (c) Mobile Ownership, mobileownership.org.  All Rights Reserved.  See LICENSE.txt in the project root for license information.
 
 open System
+open System.Text
 open FSharp.Text.Lexing
 open MobileOwnership.PolicyText.Grammar
 
@@ -23,6 +24,23 @@ let tokenDouble (lexbuf: LexBuffer<_>) =
             System.Double.Parse(s)
     DOUBLE(d)
 
+let escapeChar(lexbuf: LexBuffer<_>) =
+    let s = lexeme lexbuf
+    match s with
+    | "\\\"" -> '\"'
+    | "\\\\" -> '\\'
+    | "\\/" -> '/'
+    | "\\b" -> '\b'
+    | "\\f" -> '\f'
+    | "\\n" -> '\n'
+    | "\\r" -> '\r'
+    | "\\t" -> '\t'
+    | s when s.Length = 7 -> 
+        let ns = s.Substring(2, 4)
+        let i = Convert.ToInt32(ns, 16)
+        char(i)
+    | _ -> failwith "not done"
+
 let identOrKeyword (text: string) =
     match text with
     | "false"   -> BOOLEAN(false)
@@ -31,7 +49,6 @@ let identOrKeyword (text: string) =
     | _         -> IDENT(text)
 
 }
-
 
 let whitespace = [' ''\n''\r''\t']*
 let sign = ['+''-']?
@@ -51,9 +68,7 @@ let character =
         '\u0010''\u0011''\u0012''\u0013''\u0014''\u0015''\u0016''\u0017'
         '\u0018''\u0019''\u001a''\u001b''\u001c''\u001d''\u001e''\u001f'
         '\"''\\'
-    ] | '\\' escape
-let characters = (character+)?
-let string = '\"' characters '\"'
+    ]
 
 let digit_char = ['0'-'9']
 let letter_char = '\Lu' | '\Ll' | '\Lt' | '\Lm' | '\Lo' | '\Nl'
@@ -73,10 +88,15 @@ rule policy = parse
 | "]"                           { RBRACKET }
 | "{"                           { LBRACE }
 | "}"                           { RBRACE }
+| '\"'                          { lexString (new StringBuilder()) lexbuf }
 | integer                       { tokenInteger lexbuf }
 | number                        { tokenDouble lexbuf }
-| string                        { STRING(lexeme lexbuf) }
 | ident                         { identOrKeyword (lexeme lexbuf) }
 | whitespace                    { policy lexbuf }
 | eof                           { EOF }
 | _                             { failwith ("ParseError" + LexBuffer<_>.LexemeString lexbuf) }
+
+and lexString sb = parse
+| escape                        { sb.Append(escapeChar lexbuf) |> ignore; lexString sb lexbuf }
+| character+                    { sb.Append(lexeme lexbuf) |> ignore; lexString sb lexbuf }
+| '\"'                          { STRING (sb.ToString()) }
