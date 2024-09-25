@@ -8,11 +8,11 @@
   <ItemGroup>
     <None Include="Lexer.fsl" />
     <FsYacc Include="Grammar.fsy">
-      <OtherFlags>--module MobileOwnership.PolicyText.Grammar --internal -v</OtherFlags>
+      <OtherFlags>--module MobileOwnership.PolicyText.Grammar -v</OtherFlags>
     </FsYacc>
     <Compile Include="Grammar.fs" />
     <FsLex Include="Lexer.fsl">
-      <OtherFlags>--module MobileOwnership.PolicyText.Lexer --unicode --internal</OtherFlags>
+      <OtherFlags>--module MobileOwnership.PolicyText.Lexer --unicode</OtherFlags>
     </FsLex>
     <Compile Include="Lexer.fs" />
     <Compile Include="Parser.fs" />

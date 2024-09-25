@@ -35,11 +35,10 @@ let escapeChar(lexbuf: LexBuffer<_>) =
     | "\\n" -> '\n'
     | "\\r" -> '\r'
     | "\\t" -> '\t'
-    | s when s.Length = 7 -> 
-        let ns = s.Substring(2, 4)
+    | _ ->
+        let ns = s.Substring(2)
         let i = Convert.ToInt32(ns, 16)
         char(i)
-    | _ -> failwith "not done"
 
 let identOrKeyword (text: string) =
     match text with
@@ -60,7 +59,7 @@ let fraction = ('.' digits)?
 let integer = digit | (onenine digits) | ('-' digit) | ('-' onenine digits)
 let number = integer fraction exponent
 let hex = digit | ['A'-'F'] | ['a'-'f']
-let escape = ['\"''\\''/''b''f''n''r''t'] | 'u' hex hex hex hex
+let escape = '\\' (['\"''\\''/''b''f''n''r''t'] | 'u' hex hex hex hex)
 let character = 
     [^
         '\u0000''\u0001''\u0002''\u0003''\u0004''\u0005''\u0006''\u0007'
@@ -78,8 +77,7 @@ let formatting_char = '\Cf'
 
 let ident_start_char = letter_char | '_'
 let ident_char = letter_char | digit_char | connecting_char | combining_char | formatting_char | ['\'' '_']
-let ident_text = ident_start_char ident_char*
-let ident = ident_text | "``" ( [^'`' '\n' '\r' '\t'] | '`' [^ '`' '\n' '\r' '\t'] )+ "``"
+let ident = ident_start_char ident_char*
 
 rule policy = parse
 | ","                           { COMMA }
@@ -89,6 +87,7 @@ rule policy = parse
 | "{"                           { LBRACE }
 | "}"                           { RBRACE }
 | '\"'                          { lexString (new StringBuilder()) lexbuf }
+| "``"                          { lexIdent (new StringBuilder()) lexbuf }
 | integer                       { tokenInteger lexbuf }
 | number                        { tokenDouble lexbuf }
 | ident                         { identOrKeyword (lexeme lexbuf) }
@@ -100,3 +99,8 @@ and lexString sb = parse
 | escape                        { sb.Append(escapeChar lexbuf) |> ignore; lexString sb lexbuf }
 | character+                    { sb.Append(lexeme lexbuf) |> ignore; lexString sb lexbuf }
 | '\"'                          { STRING (sb.ToString()) }
+
+and lexIdent sb = parse
+| ( [^'`' '\n' '\r' '\t'] | '`' [^ '`' '\n' '\r' '\t'] )+
+                                { sb.Append(lexeme lexbuf) |> ignore; lexIdent sb lexbuf }
+| "``"                          { IDENT (sb.ToString()) }

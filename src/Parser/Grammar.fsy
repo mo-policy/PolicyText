@@ -51,4 +51,4 @@ array:
 elements:
     | term                          { 12 }
     | elements COMMA term           { 13 }
-    
+

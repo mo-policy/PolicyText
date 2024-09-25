@@ -5,6 +5,13 @@ namespace MobileOwnership.PolicyText
 open FSharp.Text.Lexing
 
 module Parser =
+    let lexText text: Grammar.token seq =
+        let lexbuf = LexBuffer<char>.FromString(text)
+        seq {
+            while not(lexbuf.IsPastEndOfStream) do
+                yield (Lexer.policy lexbuf)
+        }
+
     let parseText text =
         let lexbuf = LexBuffer<char>.FromString(text)
         let expr = Grammar.policy Lexer.policy lexbuf
