@@ -12,13 +12,24 @@ module Parser =
                 yield (Lexer.policy lexbuf)
         }
 
+    let parseTextDebug text =
+        let lexbuf = LexBuffer<char>.FromString(text)
+        let lexer : (LexBuffer<char> -> Grammar.token) = 
+            fun buf -> 
+                let token = Lexer.policy buf
+                printfn "%A" token
+                token
+
+        let expr = Grammar.policyText lexer lexbuf
+        expr
+
     let parseText text =
         let lexbuf = LexBuffer<char>.FromString(text)
-        let expr = Grammar.policy Lexer.policy lexbuf
+        let expr = Grammar.policyText Lexer.policy lexbuf
         expr
 
     let parseFile filename =
         use tr = System.IO.File.OpenText(filename)
         let lexbuf = LexBuffer<char>.FromTextReader(tr)
-        let expr = Grammar.policy Lexer.policy lexbuf
+        let expr = Grammar.policyText Lexer.policy lexbuf
         expr

@@ -42,6 +42,26 @@ let escapeChar(lexbuf: LexBuffer<_>) =
 
 let identOrKeyword (text: string) =
     match text with
+    | "fun"     -> FUN
+    | "if"      -> IF
+    | "then"    -> THEN
+    | "else"    -> ELSE
+    | "elif"    -> ELIF
+    | "let"     -> LET
+    | "rec"     -> REC
+    | "in"      -> IN
+    | "match"   -> MATCH
+    | "with"    -> WITH
+    | "when"    -> WHEN
+    | "policy"  -> POLICY
+    | "ref"     -> REF
+    | "try"     -> TRY
+    | "finally" -> FINALLY
+    | "send"    -> SEND
+    | "receive" -> RECEIVE
+    | "on"      -> ON
+    | "begin"   -> BEGIN
+    | "end"     -> END
     | "false"   -> BOOLEAN(false)
     | "true"    -> BOOLEAN(true)
     | "null"    -> NULL
@@ -75,17 +95,27 @@ let connecting_char = '\Pc'
 let combining_char = '\Mn' | '\Mc'
 let formatting_char = '\Cf'
 
-let ident_start_char = letter_char | '_'
+let ident_start_char = letter_char | '_' | '$'
 let ident_char = letter_char | digit_char | connecting_char | combining_char | formatting_char | ['\'' '_']
 let ident = ident_start_char ident_char*
 
-rule policy = parse
+rule policy = parse 
+| ";"                           { SEMI }
+| "|;"                          { BAR_SEMI }
 | ","                           { COMMA }
+| "|,"                          { BAR_COMMA }
 | ":"                           { COLON }
 | "["                           { LBRACKET }
 | "]"                           { RBRACKET }
 | "{"                           { LBRACE }
 | "}"                           { RBRACE }
+| "("                           { LPAREN }
+| ")"                           { RPAREN }
+| "->"                          { RARROW }
+| "="                           { EQUAL }
+| "|"                           { BAR }
+| "!"                           { BANG }
+| ":="                          { COLON_EQUAL }
 | '\"'                          { lexString (new StringBuilder()) lexbuf }
 | "``"                          { lexIdent (new StringBuilder()) lexbuf }
 | integer                       { tokenInteger lexbuf }

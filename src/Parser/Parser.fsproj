@@ -7,11 +7,11 @@
 
   <ItemGroup>
     <Compile Include="Actions.fs" />
-    <None Include="Lexer.fsl" />
     <FsYacc Include="Grammar.fsy">
       <OtherFlags>--module MobileOwnership.PolicyText.Grammar -v</OtherFlags>
     </FsYacc>
     <Compile Include="Grammar.fs" />
+    <None Include="Lexer.fsl" />
     <FsLex Include="Lexer.fsl">
       <OtherFlags>--module MobileOwnership.PolicyText.Lexer --unicode</OtherFlags>
     </FsLex>

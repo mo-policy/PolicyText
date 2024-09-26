@@ -2,13 +2,43 @@
 module MobileOwnership.PolicyText.Grammar
 type token = 
   | EOF
-  | NULL
+  | SEMI
+  | BAR_SEMI
   | COMMA
+  | BAR_COMMA
+  | RARROW
+  | EQUAL
+  | BAR
+  | COLON_EQUAL
+  | BANG
+  | SEND
+  | RECEIVE
+  | ON
+  | REF
+  | FUN
+  | IF
+  | THEN
+  | ELSE
+  | ELIF
+  | BEGIN
+  | END
+  | LET
+  | REC
+  | IN
+  | MATCH
+  | WITH
+  | WHEN
+  | POLICY
+  | TRY
+  | FINALLY
+  | NULL
   | COLON
   | LBRACKET
   | RBRACKET
   | LBRACE
   | RBRACE
+  | LPAREN
+  | RPAREN
   | BOOLEAN of (bool)
   | DOUBLE of (double)
   | INTEGER of (int64)
@@ -16,13 +46,43 @@ type token =
   | IDENT of (string)
 type tokenId = 
     | TOKEN_EOF
-    | TOKEN_NULL
+    | TOKEN_SEMI
+    | TOKEN_BAR_SEMI
     | TOKEN_COMMA
+    | TOKEN_BAR_COMMA
+    | TOKEN_RARROW
+    | TOKEN_EQUAL
+    | TOKEN_BAR
+    | TOKEN_COLON_EQUAL
+    | TOKEN_BANG
+    | TOKEN_SEND
+    | TOKEN_RECEIVE
+    | TOKEN_ON
+    | TOKEN_REF
+    | TOKEN_FUN
+    | TOKEN_IF
+    | TOKEN_THEN
+    | TOKEN_ELSE
+    | TOKEN_ELIF
+    | TOKEN_BEGIN
+    | TOKEN_END
+    | TOKEN_LET
+    | TOKEN_REC
+    | TOKEN_IN
+    | TOKEN_MATCH
+    | TOKEN_WITH
+    | TOKEN_WHEN
+    | TOKEN_POLICY
+    | TOKEN_TRY
+    | TOKEN_FINALLY
+    | TOKEN_NULL
     | TOKEN_COLON
     | TOKEN_LBRACKET
     | TOKEN_RBRACKET
     | TOKEN_LBRACE
     | TOKEN_RBRACE
+    | TOKEN_LPAREN
+    | TOKEN_RPAREN
     | TOKEN_BOOLEAN
     | TOKEN_DOUBLE
     | TOKEN_INTEGER
@@ -31,14 +91,39 @@ type tokenId =
     | TOKEN_end_of_input
     | TOKEN_error
 type nonTerminalId = 
-    | NONTERM__startpolicy
-    | NONTERM_policy
+    | NONTERM__startpolicyText
+    | NONTERM_policyText
     | NONTERM_term
-    | NONTERM_object
-    | NONTERM_members
-    | NONTERM_member
-    | NONTERM_array
+    | NONTERM_sequence
+    | NONTERM_steps
+    | NONTERM_application
+    | NONTERM_function
+    | NONTERM_if
+    | NONTERM_ifElse
+    | NONTERM_let
+    | NONTERM_rules
+    | NONTERM_rule
+    | NONTERM_match
+    | NONTERM_policy
+    | NONTERM_receive
+    | NONTERM_send
+    | NONTERM_tryWith
+    | NONTERM_tryFinally
+    | NONTERM_ref
+    | NONTERM_dereference
+    | NONTERM_assignment
+    | NONTERM_value
+    | NONTERM_block
+    | NONTERM_paren
+    | NONTERM_sep_semi
+    | NONTERM_sep_comma
+    | NONTERM_lookup
+    | NONTERM_map
     | NONTERM_elements
+    | NONTERM_element
+    | NONTERM_list
+    | NONTERM_items
+    | NONTERM_constant
 /// This function maps tokens to integer indexes
 val tagOfToken: token -> int
 
@@ -50,4 +135,4 @@ val prodIdxToNonTerminal: int -> nonTerminalId
 
 /// This function gets the name of a token as a string
 val token_to_string: token -> string
-val policy : (FSharp.Text.Lexing.LexBuffer<'cty> -> token) -> FSharp.Text.Lexing.LexBuffer<'cty> -> (Value) 
+val policyText : (FSharp.Text.Lexing.LexBuffer<'cty> -> token) -> FSharp.Text.Lexing.LexBuffer<'cty> -> (Value) 
