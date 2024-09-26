@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Actions.fs" />
     <None Include="Lexer.fsl" />
     <FsYacc Include="Grammar.fsy">
       <OtherFlags>--module MobileOwnership.PolicyText.Grammar -v</OtherFlags>
@@ -17,8 +18,6 @@
     <Compile Include="Lexer.fs" />
     <Compile Include="Parser.fs" />
   </ItemGroup>
-
-  <ItemGroup />
 
   <ItemGroup>
     <PackageReference Include="FsLexYacc" Version="11.3.0" />

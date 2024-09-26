@@ -2,6 +2,8 @@
 // Copyright (c) Mobile Ownership, mobileownership.org.  All Rights Reserved.  See LICENSE.txt in the project root for license information.
 
 open System
+open MobileOwnership.PolicyText
+open MobileOwnership.PolicyText.Actions
 
 %}
 
@@ -15,40 +17,38 @@ open System
 %token NULL COMMA COLON LBRACKET RBRACKET LBRACE RBRACE
 %token EOF
 
-%type <int> policy
-
+%type <Value> policy
 
 %%
 
 policy:
-    | term EOF                      { 1 }
+    | term EOF                      { $1 }
 
 term: 
     | object                        { $1 } 
     | array                         { $1 }
-    | STRING                        { 2 }
-    | INTEGER                       { 3 }
-    | DOUBLE                        { 4 }
-    | BOOLEAN                       { 5 }
-    | NULL                          { 6 }
+    | STRING                        { Value.String($1) }
+    | INTEGER                       { Value.Integer($1) }
+    | DOUBLE                        { Value.Double($1) }
+    | BOOLEAN                       { Value.Boolean($1) }
+    | NULL                          { Value.Null }
 
 object: 
-    | LBRACE RBRACE                 { 7 }
-    | LBRACE members RBRACE         { $2 }
+    | LBRACE RBRACE                 { termObject 1 parseState }
+    | LBRACE members RBRACE         { termObject 2 parseState }
 
 members:
-    | member                        { 8 }
-    | members COMMA member          { $3 }
+    | member                        { [ $1; ] }
+    | members COMMA member          { $3 :: $1 }
 
 member:
-    | STRING COLON term             { 9 }
-    | IDENT COLON term              { 10 }
+    | STRING COLON term             { ($1, $3) }
+    | IDENT COLON term              { ($1, $3) }
 
 array:
-    | LBRACKET RBRACKET             { 11 }
-    | LBRACKET elements RBRACKET    { $2 }
+    | LBRACKET RBRACKET             { termArray 1 parseState }
+    | LBRACKET elements RBRACKET    { termArray 2 parseState }
     
 elements:
-    | term                          { 12 }
-    | elements COMMA term           { 13 }
-
+    | term                          { [ $1; ] }
+    | elements COMMA term           { $3 :: $1 }

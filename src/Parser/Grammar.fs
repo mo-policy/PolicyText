@@ -8,9 +8,11 @@ open FSharp.Text.Parsing.ParseHelpers
 // Copyright (c) Mobile Ownership, mobileownership.org.  All Rights Reserved.  See LICENSE.txt in the project root for license information.
 
 open System
+open MobileOwnership.PolicyText
+open MobileOwnership.PolicyText.Actions
 
 
-# 13 "Grammar.fs"
+# 15 "Grammar.fs"
 // This type is the type of tokens accepted by the parser
 type token = 
   | EOF
@@ -162,159 +164,147 @@ let _fsyacc_reductionSymbolCounts = [|1us;2us;1us;1us;1us;1us;1us;1us;1us;2us;3u
 let _fsyacc_productionToNonTerminalTable = [|0us;1us;2us;2us;2us;2us;2us;2us;2us;3us;3us;4us;4us;5us;5us;6us;6us;7us;7us;|]
 let _fsyacc_immediateActions = [|65535us;49152us;65535us;16385us;16386us;16387us;16388us;16389us;16390us;16391us;16392us;65535us;16393us;65535us;16394us;16395us;65535us;16396us;65535us;65535us;16397us;65535us;65535us;16398us;65535us;16399us;65535us;16400us;16401us;65535us;16402us;|]
 let _fsyacc_reductions = lazy [|
-# 165 "Grammar.fs"
+# 167 "Grammar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
-            let _1 = parseState.GetInput(1) :?> int in
+            let _1 = parseState.GetInput(1) :?> Value in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
                       raise (FSharp.Text.Parsing.Accept(Microsoft.FSharp.Core.Operators.box _1))
                    )
                  : 'gentype__startpolicy));
-# 174 "Grammar.fs"
+# 176 "Grammar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_term in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 24 "Grammar.fsy"
-                                                           1 
+# 25 "Grammar.fsy"
+                                                           _1 
                    )
-# 24 "Grammar.fsy"
-                 : int));
-# 185 "Grammar.fs"
+# 25 "Grammar.fsy"
+                 : Value));
+# 187 "Grammar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_object in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 27 "Grammar.fsy"
+# 28 "Grammar.fsy"
                                                            _1 
                    )
-# 27 "Grammar.fsy"
+# 28 "Grammar.fsy"
                  : 'gentype_term));
-# 196 "Grammar.fs"
+# 198 "Grammar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_array in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 28 "Grammar.fsy"
+# 29 "Grammar.fsy"
                                                            _1 
                    )
-# 28 "Grammar.fsy"
+# 29 "Grammar.fsy"
                  : 'gentype_term));
-# 207 "Grammar.fs"
+# 209 "Grammar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> string in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 29 "Grammar.fsy"
-                                                           2 
+# 30 "Grammar.fsy"
+                                                           Value.String(_1) 
                    )
-# 29 "Grammar.fsy"
+# 30 "Grammar.fsy"
                  : 'gentype_term));
-# 218 "Grammar.fs"
+# 220 "Grammar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> int64 in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 30 "Grammar.fsy"
-                                                           3 
+# 31 "Grammar.fsy"
+                                                           Value.Integer(_1) 
                    )
-# 30 "Grammar.fsy"
+# 31 "Grammar.fsy"
                  : 'gentype_term));
-# 229 "Grammar.fs"
+# 231 "Grammar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> double in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 31 "Grammar.fsy"
-                                                           4 
+# 32 "Grammar.fsy"
+                                                           Value.Double(_1) 
                    )
-# 31 "Grammar.fsy"
+# 32 "Grammar.fsy"
                  : 'gentype_term));
-# 240 "Grammar.fs"
+# 242 "Grammar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> bool in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 32 "Grammar.fsy"
-                                                           5 
+# 33 "Grammar.fsy"
+                                                           Value.Boolean(_1) 
                    )
-# 32 "Grammar.fsy"
+# 33 "Grammar.fsy"
                  : 'gentype_term));
-# 251 "Grammar.fs"
+# 253 "Grammar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 33 "Grammar.fsy"
-                                                           6 
+# 34 "Grammar.fsy"
+                                                           Value.Null 
                    )
-# 33 "Grammar.fsy"
+# 34 "Grammar.fsy"
                  : 'gentype_term));
-# 261 "Grammar.fs"
+# 263 "Grammar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 36 "Grammar.fsy"
-                                                           7 
+# 37 "Grammar.fsy"
+                                                           termObject 1 parseState 
                    )
-# 36 "Grammar.fsy"
+# 37 "Grammar.fsy"
                  : 'gentype_object));
-# 271 "Grammar.fs"
+# 273 "Grammar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _2 = parseState.GetInput(2) :?> 'gentype_members in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 37 "Grammar.fsy"
-                                                           _2 
+# 38 "Grammar.fsy"
+                                                           termObject 2 parseState 
                    )
-# 37 "Grammar.fsy"
+# 38 "Grammar.fsy"
                  : 'gentype_object));
-# 282 "Grammar.fs"
+# 284 "Grammar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_member in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 40 "Grammar.fsy"
-                                                           8 
+# 41 "Grammar.fsy"
+                                                           [ _1; ] 
                    )
-# 40 "Grammar.fsy"
+# 41 "Grammar.fsy"
                  : 'gentype_members));
-# 293 "Grammar.fs"
+# 295 "Grammar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_members in
             let _3 = parseState.GetInput(3) :?> 'gentype_member in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 41 "Grammar.fsy"
-                                                           _3 
+# 42 "Grammar.fsy"
+                                                           _3 :: _1 
                    )
-# 41 "Grammar.fsy"
+# 42 "Grammar.fsy"
                  : 'gentype_members));
-# 305 "Grammar.fs"
-        (fun (parseState : FSharp.Text.Parsing.IParseState) ->
-            let _1 = parseState.GetInput(1) :?> string in
-            let _3 = parseState.GetInput(3) :?> 'gentype_term in
-            Microsoft.FSharp.Core.Operators.box
-                (
-                   (
-# 44 "Grammar.fsy"
-                                                           9 
-                   )
-# 44 "Grammar.fsy"
-                 : 'gentype_member));
-# 317 "Grammar.fs"
+# 307 "Grammar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> string in
             let _3 = parseState.GetInput(3) :?> 'gentype_term in
@@ -322,56 +312,68 @@ let _fsyacc_reductions = lazy [|
                 (
                    (
 # 45 "Grammar.fsy"
-                                                           10 
+                                                           (_1, _3) 
                    )
 # 45 "Grammar.fsy"
                  : 'gentype_member));
-# 329 "Grammar.fs"
+# 319 "Grammar.fs"
+        (fun (parseState : FSharp.Text.Parsing.IParseState) ->
+            let _1 = parseState.GetInput(1) :?> string in
+            let _3 = parseState.GetInput(3) :?> 'gentype_term in
+            Microsoft.FSharp.Core.Operators.box
+                (
+                   (
+# 46 "Grammar.fsy"
+                                                           (_1, _3) 
+                   )
+# 46 "Grammar.fsy"
+                 : 'gentype_member));
+# 331 "Grammar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 48 "Grammar.fsy"
-                                                           11 
+# 49 "Grammar.fsy"
+                                                           termArray 1 parseState 
                    )
-# 48 "Grammar.fsy"
+# 49 "Grammar.fsy"
                  : 'gentype_array));
-# 339 "Grammar.fs"
+# 341 "Grammar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _2 = parseState.GetInput(2) :?> 'gentype_elements in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 49 "Grammar.fsy"
-                                                           _2 
+# 50 "Grammar.fsy"
+                                                           termArray 2 parseState 
                    )
-# 49 "Grammar.fsy"
+# 50 "Grammar.fsy"
                  : 'gentype_array));
-# 350 "Grammar.fs"
+# 352 "Grammar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_term in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 52 "Grammar.fsy"
-                                                           12 
+# 53 "Grammar.fsy"
+                                                           [ _1; ] 
                    )
-# 52 "Grammar.fsy"
+# 53 "Grammar.fsy"
                  : 'gentype_elements));
-# 361 "Grammar.fs"
+# 363 "Grammar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_elements in
             let _3 = parseState.GetInput(3) :?> 'gentype_term in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 53 "Grammar.fsy"
-                                                           13 
+# 54 "Grammar.fsy"
+                                                           _3 :: _1 
                    )
-# 53 "Grammar.fsy"
+# 54 "Grammar.fsy"
                  : 'gentype_elements));
 |]
-# 374 "Grammar.fs"
+# 376 "Grammar.fs"
 let tables : FSharp.Text.Parsing.Tables<_> = 
   { reductions = _fsyacc_reductions.Value;
     endOfInputTag = _fsyacc_endOfInputTag;
@@ -393,5 +395,5 @@ let tables : FSharp.Text.Parsing.Tables<_> =
     numTerminals = 16;
     productionToNonTerminalTable = _fsyacc_productionToNonTerminalTable  }
 let engine lexer lexbuf startState = tables.Interpret(lexer, lexbuf, startState)
-let policy lexer lexbuf : int =
+let policy lexer lexbuf : Value =
     engine lexer lexbuf 0 :?> _
