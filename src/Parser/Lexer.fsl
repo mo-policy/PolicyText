@@ -112,9 +112,20 @@ rule policy = parse
 | "("                           { LPAREN }
 | ")"                           { RPAREN }
 | "->"                          { RARROW }
-| "="                           { EQUAL }
 | "|"                           { BAR }
 | "!"                           { BANG }
+| "/"                           { OP_MULTIPLICATION("/") }
+| "*"                           { OP_MULTIPLICATION("*") }
+| "%"                           { OP_MULTIPLICATION("%") }
+| "+"                           { OP_ADDITION("+") }
+| "-"                           { OP_ADDITION("-") }
+| "^"                           { OP_ADDITION("^") }
+| "="                           { EQUAL }
+| "<>"                          { OP_COMPARE("<>") }
+| "<"                           { OP_COMPARE("<") }
+| ">"                           { OP_COMPARE(">") }
+| "<="                          { OP_COMPARE("<=") }
+| "<="                          { OP_COMPARE("<=") }
 | ":="                          { COLON_EQUAL }
 | '\"'                          { lexString (new StringBuilder()) lexbuf }
 | "``"                          { lexIdent (new StringBuilder()) lexbuf }

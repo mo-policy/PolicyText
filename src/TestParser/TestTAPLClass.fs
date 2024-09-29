@@ -169,9 +169,30 @@ type TestTAPLClass() =
         let truExpected = Parser.parseText js
         (truActual, truExpected)
 
+    let dev() : (Value * Value) =
+        let text = "fun f -> fun x -> a b"
+        let js = """ 
+            {
+                $policy: "Function",
+                pattern: { $policy: "Lookup", name: "f" },
+                term: {
+                    $policy: "Function",
+                    pattern: { $policy: "Lookup", name: "x" },
+                    term: {
+                        $policy: "Application",
+                        function: { $policy: "Lookup", name: "a" },
+                        arg: { $policy: "Lookup", name: "b" }
+                    }
+                }
+            }"""
+        let truActual = Parser.parseText text
+        let truExpected = Parser.parseText js
+        (truActual, truExpected)
+
     [<TestMethod>]
     member _.TestParserTAPL() = 
         let data = [
+            dev;
             pairTAPL;
             notTAPL;
             orTAPL;

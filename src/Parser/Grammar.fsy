@@ -14,20 +14,24 @@ open MobileOwnership.PolicyText.Actions
 %token <int64> INTEGER
 %token <double> DOUBLE 
 %token <bool> BOOLEAN
+%token <string> OP_MULTIPLICATION OP_ADDITION OP_COMPARE
 %token NULL COLON LBRACKET RBRACKET LBRACE RBRACE LPAREN RPAREN
 %token FUN IF THEN ELSE ELIF BEGIN END LET REC IN MATCH WITH WHEN POLICY TRY FINALLY
 %token SEND RECEIVE ON REF 
-%token RARROW EQUAL BAR COLON_EQUAL BANG
+%token RARROW BAR BANG EQUAL COLON_EQUAL
 %token SEMI BAR_SEMI COMMA BAR_COMMA
 %token EOF
 
 %type <Value> policyText
 
-%left app 
-%right RARROW REF BANG SEMI BAR_SEMI
+%right REF BANG 
+%left COLON SEMI BAR_SEMI BAR RARROW
 %nonassoc term_if 
 %nonassoc ELSE ELIF
-%nonassoc COLON_EQUAL
+%left OP_COMPARE
+%left OP_ADDITION 
+%left OP_MULTIPLICATION 
+%left COLON_EQUAL 
 
 %%
 
@@ -35,129 +39,136 @@ policyText:
     | term EOF                              { $1 }
 
 term: 
-    | sequence                              { $1 }
-    | function                              { $1 }
+    | infix                                 { $1 }
+    | annotation                            { $1 }
     | if                                    { $1 }
-    | let                                   { $1 }
     | match                                 { $1 }
     | policy                                { $1 }
-    | tryWith                               { $1 }
-    | tryFinally                            { $1 }
     | receive                               { $1 }
     | send                                  { $1 }
+    | tryWith                               { $1 }
+    | tryFinally                            { $1 }
     | ref                                   { $1 }
     | dereference                           { $1 }
-    | assignment                            { $1 }
 
-sequence:
-    | steps                                 { termSequence parseState }
-
-steps:
-    | steps sep_semi application            { $3 :: $1 }
-    | application                           { [ $1 ] }
-
-application: 
-    | application value     %prec app       { termApplication parseState }
-    | value                                 { $1 }
+infix:
+    | infixAssignment                       { $1 }
+    | function { $1 }
 
 function:
-    | FUN term RARROW term                  { termFunction parseState }
+    | FUN term RARROW function              { termFunction parseState }
+    | application                           { $1 }
+
+application:
+    | atomic                                { $1 }
+    | application atomic                    { termApplication parseState }
+
+infixAssignment:
+    | infix COLON_EQUAL infix               { termInfix parseState }
+    | infixCompare                          { $1 } 
+
+infixCompare:
+    | infix OP_COMPARE infix                { termInfix parseState }
+    | infixAddition                         { $1 } 
+    
+infixAddition:
+    | infix OP_ADDITION infix               { termInfix parseState }
+    | infixMultiplication                   { $1 }
+
+infixMultiplication:
+    | infix OP_MULTIPLICATION infix         { termInfix parseState }
+
+annotation:
+    | term COLON IDENT                      { termAnnotation parseState }
 
 if:
-    | IF value THEN value %prec term_if     { termIf 1 parseState }
-    | IF value THEN value ifElse            { termIf 2 parseState }
+    | IF term THEN term %prec term_if       { termIf 1 parseState }
+    | IF term THEN term ifElse              { termIf 2 parseState }
     
 ifElse:
-    | ELIF value THEN value %prec term_if   { termIf 3 parseState }
-    | ELIF value THEN value ifElse          { termIf 4 parseState }
-    | ELSE value                            { $2 }
-
-let:
-    | LET value EQUAL value IN term END     { termLet 1 parseState }
-    | LET REC value EQUAL value IN term END { termLet 2 parseState }
-
-rules:
-    | rules BAR rule                        { $3 :: $1 }
-    | rule                                  { [ $1 ] }
-
-rule:
-    | value RARROW value                    { termRule 1 parseState }
-    | value WHEN value RARROW value         { termRule 2 parseState }
+    | ELIF term THEN term %prec term_if     { termIf 3 parseState }
+    | ELIF term THEN term ifElse            { termIf 4 parseState }
+    | ELSE term                             { $2 }
 
 match:
-    | MATCH value WITH rules                { termMatch 1 parseState }
-    | MATCH value WITH BAR rules            { termMatch 2 parseState }
+    | MATCH term WITH rules                 { termMatch 1 parseState }
+    | MATCH term WITH BAR rules             { termMatch 2 parseState }
 
 policy:
-    | POLICY value WITH rules               { termPolicy 1 parseState }
-    | POLICY value WITH BAR rules           { termPolicy 2 parseState }
+    | POLICY term WITH rules                { termPolicy 1 parseState }
+    | POLICY term WITH BAR rules            { termPolicy 2 parseState }
 
 receive:
-    | RECEIVE ON value WITH rules           { termReceive 1 parseState }
-    | RECEIVE ON value WITH BAR rules       { termReceive 2 parseState }
+    | RECEIVE ON term WITH rules            { termReceive 1 parseState }
+    | RECEIVE ON term WITH BAR rules        { termReceive 2 parseState }
 
 send:
-    | SEND value ON value                   { termSend parseState }
+    | SEND term ON atomic                   { termSend parseState }
 
 tryWith:
-    | TRY value WITH rules                  { termTryWith parseState }
+    | TRY term WITH rules                   { termTryWith parseState }
 
 tryFinally:
-    | TRY value FINALLY value               { termTryFinally parseState }
+    | TRY term FINALLY atomic               { termTryFinally parseState }
 
 ref:
-    | REF value                             { termRef parseState }
+    | REF atomic                            { termRef parseState }
 
 dereference:
-    | BANG value                            { termDereference parseState }
+    | BANG atomic                           { termDereference parseState }
 
-assignment:
-    | value COLON_EQUAL value               { termAssignment parseState }
+rules:
+    | rule                                  { [ $1 ] }
+    | rules BAR rule                        { $3 :: $1 }
 
-value: 
-    | lookup                                { $1 }
-    | map                                   { $1 } 
-    | list                                  { $1 }
+rule:
+    | term RARROW atomic                    { termRule 1 parseState }
+    | term WHEN term RARROW atomic          { termRule 2 parseState }
+
+atomic: 
     | constant                              { $1 }
-    | block                                 { $1 }
-    | paren                                 { $1 }
+    | lookup                                { $1 }
+    | LPAREN commaSepTerms RPAREN           { termTuple parseState }
+    | BEGIN semiSepTerms END                { termSequence parseState }
+    | let                                   { $1 }
+    | map                                   { $1 }
+    | list                                  { $1 }
 
-block: 
-    | BEGIN term END                        { $2 }
+let:
+    | LET term EQUAL term 
+            IN semiSepTerms END             { termLet 1 parseState }
+    | LET REC term EQUAL term 
+            IN semiSepTerms END             { termLet 2 parseState }
 
-paren:
-    | LPAREN term RPAREN                    { $2 }
+map:
+    | LBRACE RBRACE                         { Value.Map([]) }
+    | LBRACE keyValuePairs RBRACE           { Value.Map(List.rev $2) }
 
-sep_semi:
-    | SEMI                                  { ";" }
-    | BAR_SEMI                              { "|;" }
+keyValuePairs:
+    | keyValuePair                          { [ $1 ] }
+    | keyValuePairs COMMA keyValuePair      { $3 :: $1 }
+    | keyValuePairs BAR_COMMA keyValuePair  { ( keyValueParallel 3 parseState ) :: $1 }
 
-sep_comma:
-    | COMMA                                 { "," }
-    | BAR_COMMA                             { "|," }
+keyValuePair:
+    | STRING COLON term                     { ($1, $3) }
+    | IDENT COLON term                      { ($1, $3) }
+
+list:
+    | LBRACKET RBRACKET                     { Value.List([]) }
+    | LBRACKET commaSepTerms RBRACKET       { Value.List(List.rev $2) }
+
+commaSepTerms:
+    | term                                  { [ $1 ] }
+    | commaSepTerms COMMA term              { $3 :: $1 }
+    | commaSepTerms BAR_COMMA term          { ( termParallel 3 parseState ) :: $1 }
+
+semiSepTerms:
+    | term                                  { [ $1 ] }
+    | semiSepTerms SEMI term                { $3 :: $1 }
+    | semiSepTerms BAR_SEMI term            { ( termParallel 3 parseState ) :: $1 }
 
 lookup:
     | IDENT                                 { termLookup parseState }
-
-map: 
-    | LBRACE RBRACE                         { termMap 1 parseState }
-    | LBRACE elements RBRACE                { termMap 2 parseState }
-
-elements:
-    | elements sep_comma element            { $3 :: $1 }
-    | element                               { [ $1; ] }
-
-element:
-    | STRING COLON value                    { ($1, $3) }
-    | IDENT COLON value                     { ($1, $3) }
-
-list:
-    | LBRACKET RBRACKET                     { termList 1 parseState }
-    | LBRACKET items RBRACKET               { termList 2 parseState }
-    
-items:
-    | items sep_comma value                 { $3 :: $1 }
-    | value                                 { [ $1; ] }
 
 constant: 
     | STRING                                { Value.String($1) }

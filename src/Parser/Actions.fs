@@ -15,18 +15,6 @@ type Value =
     | Null
 
 module Actions = 
-    let termSequence (parseState: IParseState)  : Value =
-        let terms = parseState.GetInput(1) :?> Value list
-        match terms with
-        | [ t ] -> t
-        | _ -> 
-            Value.Map(
-                [
-                    ("$policy", Value.String("Sequence"));
-                    ("terms", Value.List(List.rev terms));
-                ]
-            )
-
     let termApplication (parseState: IParseState) : Value = 
         let appFunction = parseState.GetInput(1) :?> Value
         let appArg = parseState.GetInput(2) :?> Value
@@ -46,6 +34,17 @@ module Actions =
                 ("$policy", Value.String("Function"));
                 ("pattern", funPattern);
                 ("term", funTerm);
+            ]
+        )
+
+    let termAnnotation (parseState: IParseState) : Value = 
+        let annotationTerm = parseState.GetInput(1) :?> Value
+        let annotationType = parseState.GetInput(3) :?> Value
+        Value.Map(
+            [
+                ("$policy", Value.String("Annotation"));
+                ("term", annotationTerm);
+                ("type", annotationType);
             ]
         )
 
@@ -77,33 +76,76 @@ module Actions =
             )
         | _ -> failwith "unexpected kind"
 
+    let oneOrSequence (values: Value list) : Value = 
+        match values with
+        | [ t; ] -> t
+        | _ -> 
+            Value.Map(
+                [
+                    ("$policy", Value.String("Sequence"));
+                    ("terms", Value.List(List.rev values));
+                ]
+            )
+
     let termLet (kind: int) (parseState: IParseState) : Value = 
         match kind with
         | 1 -> 
             let letPattern = parseState.GetInput(2) :?> Value
             let letTerm = parseState.GetInput(4) :?> Value
-            let letIn = parseState.GetInput(6) :?> Value
+            let letIn = parseState.GetInput(6) :?> Value list
             Value.Map(
                 [
                     ("$policy", Value.String("Let"));
                     ("pattern", letPattern);
                     ("term", letTerm);
-                    ("in", letIn);
+                    ("in", oneOrSequence letIn);
                 ]
             )
         | 2 ->
             let letPattern = parseState.GetInput(3) :?> Value
             let letTerm = parseState.GetInput(5) :?> Value
-            let letIn = parseState.GetInput(7) :?> Value
+            let letIn = parseState.GetInput(7) :?> Value list
             Value.Map(
                 [
                     ("$policy", Value.String("LetRec"));
                     ("pattern", letPattern);
                     ("term", letTerm);
-                    ("in", letIn);
+                    ("in", oneOrSequence letIn);
                 ]
             )
         | _ -> failwith "unexpected kind"
+
+    let termSequence (parseState: IParseState)  : Value =
+        let terms = parseState.GetInput(2) :?> Value list
+        match terms with
+        | [ t ] -> t
+        | _ -> 
+            Value.Map(
+                [
+                    ("$policy", Value.String("Sequence"));
+                    ("terms", Value.List(List.rev terms));
+                ]
+            )
+
+    let termTuple (parseState: IParseState)  : Value =
+        let terms = parseState.GetInput(2) :?> Value list
+        match terms with
+        | [ t ] -> t
+        | _ -> 
+            Value.List(terms)
+
+    let termInfix (parseState: IParseState)  : Value =
+        let infixLeft = parseState.GetInput(1) :?> Value
+        let infixOperator = parseState.GetInput(2) :?> string
+        let infixRight = parseState.GetInput(3) :?> Value
+        Value.Map(
+                [
+                    ("$policy", Value.String("Infix"));
+                    ("operator", Value.String(infixOperator));
+                    ("left", infixLeft);
+                    ("right", infixRight);
+                ]
+            )
 
     let termRule (kind: int) (parseState: IParseState) : Value = 
         match kind with
@@ -237,6 +279,26 @@ module Actions =
                 ("name", Value.String(lookupName));
             ]
         )
+
+    let termParallel (index: int) (parseState: IParseState) : Value =
+        let parallelTerm = parseState.GetInput(index) :?> Value
+        Value.Map(
+            [
+                ("$policy", Value.String("Parallel"));
+                ("term", parallelTerm);
+            ]
+        )
+
+    let keyValueParallel (index: int) (parseState: IParseState) : (string * Value) =
+        let (key, value) = parseState.GetInput(index) :?> (string * Value)
+        let parallelValue = 
+            Value.Map(
+                [
+                    ("$policy", Value.String("Parallel"));
+                    ("term", value);
+                ]
+            )
+        (key, parallelValue)
 
     let termMap (kind: int) (parseState: IParseState)  : Value =
         match kind with

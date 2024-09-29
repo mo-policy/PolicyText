@@ -7,10 +7,10 @@ type token =
   | COMMA
   | BAR_COMMA
   | RARROW
-  | EQUAL
   | BAR
-  | COLON_EQUAL
   | BANG
+  | EQUAL
+  | COLON_EQUAL
   | SEND
   | RECEIVE
   | ON
@@ -39,6 +39,9 @@ type token =
   | RBRACE
   | LPAREN
   | RPAREN
+  | OP_MULTIPLICATION of (string)
+  | OP_ADDITION of (string)
+  | OP_COMPARE of (string)
   | BOOLEAN of (bool)
   | DOUBLE of (double)
   | INTEGER of (int64)
@@ -51,10 +54,10 @@ type tokenId =
     | TOKEN_COMMA
     | TOKEN_BAR_COMMA
     | TOKEN_RARROW
-    | TOKEN_EQUAL
     | TOKEN_BAR
-    | TOKEN_COLON_EQUAL
     | TOKEN_BANG
+    | TOKEN_EQUAL
+    | TOKEN_COLON_EQUAL
     | TOKEN_SEND
     | TOKEN_RECEIVE
     | TOKEN_ON
@@ -83,6 +86,9 @@ type tokenId =
     | TOKEN_RBRACE
     | TOKEN_LPAREN
     | TOKEN_RPAREN
+    | TOKEN_OP_MULTIPLICATION
+    | TOKEN_OP_ADDITION
+    | TOKEN_OP_COMPARE
     | TOKEN_BOOLEAN
     | TOKEN_DOUBLE
     | TOKEN_INTEGER
@@ -94,15 +100,16 @@ type nonTerminalId =
     | NONTERM__startpolicyText
     | NONTERM_policyText
     | NONTERM_term
-    | NONTERM_sequence
-    | NONTERM_steps
-    | NONTERM_application
+    | NONTERM_infix
     | NONTERM_function
+    | NONTERM_application
+    | NONTERM_infixAssignment
+    | NONTERM_infixCompare
+    | NONTERM_infixAddition
+    | NONTERM_infixMultiplication
+    | NONTERM_annotation
     | NONTERM_if
     | NONTERM_ifElse
-    | NONTERM_let
-    | NONTERM_rules
-    | NONTERM_rule
     | NONTERM_match
     | NONTERM_policy
     | NONTERM_receive
@@ -111,18 +118,17 @@ type nonTerminalId =
     | NONTERM_tryFinally
     | NONTERM_ref
     | NONTERM_dereference
-    | NONTERM_assignment
-    | NONTERM_value
-    | NONTERM_block
-    | NONTERM_paren
-    | NONTERM_sep_semi
-    | NONTERM_sep_comma
-    | NONTERM_lookup
+    | NONTERM_rules
+    | NONTERM_rule
+    | NONTERM_atomic
+    | NONTERM_let
     | NONTERM_map
-    | NONTERM_elements
-    | NONTERM_element
+    | NONTERM_keyValuePairs
+    | NONTERM_keyValuePair
     | NONTERM_list
-    | NONTERM_items
+    | NONTERM_commaSepTerms
+    | NONTERM_semiSepTerms
+    | NONTERM_lookup
     | NONTERM_constant
 /// This function maps tokens to integer indexes
 val tagOfToken: token -> int

@@ -8,7 +8,7 @@ open MobileOwnership.PolicyText
 [<TestClass>]
 type TestTermClass() =
     let testSequence() : (string * string) = 
-        let text = "(1; 2)"
+        let text = "begin 1; 2 end"
         let js = """ 
             {
                 $policy: "Sequence",
@@ -68,6 +68,27 @@ type TestTermClass() =
             }"""
         (text, js)
 
+    let testInfixPlus() : (string * string) = 
+        let text = "1+2"
+        let js = """
+            {
+                $policy: "Infix",
+                operator: "+",
+                left: 1,
+                right: 2
+            }"""
+        (text, js)
+
+    let testInfixPlusMult() : (string * string) = 
+        let text = "1+2*3"
+        let js = "1+(2*3)"
+        (text, js)
+
+    let testInfixDivDiv() : (string * string) = 
+        let text = "1/2/3"
+        let js = "(1/2)/3"
+        (text, js)
+
     [<TestMethod>]
     member _.TestParserValues() =
         let data = [
@@ -94,6 +115,23 @@ type TestTermClass() =
             testSequence;
             testPolicyNestedInner;
             testPolicy1;
+        ]
+        for f in data do
+            let (text, js) = f()
+            let actual = Parser.parseText text
+            let expected = Parser.parseText js
+            let isEqual = (actual = expected)
+            if not(isEqual) then
+                printfn "%A" actual
+                printfn "%A" expected
+            Assert.IsTrue(isEqual)
+
+    [<TestMethod>]
+    member _.TestParserInfix() =
+        let data = [ 
+            testInfixPlus;
+            testInfixPlusMult;
+            testInfixDivDiv;
         ]
         for f in data do
             let (text, js) = f()
