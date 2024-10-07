@@ -11,6 +11,13 @@ type TestLexerClass() =
     let data = [
         ("", [ EOF ]);
         ("        \r\n", [ EOF ]);
+        ("  // hello\r\n", [ EOF ]);
+        ("(* \r\n ``hello\r\n *)", [ EOF ]);
+        ("(* \" *) \" *)", [ EOF ]);
+        ("(* let x = \" *) \" *)", [ EOF ]);
+        ("(* lety x = \" *) \" *)", [ EOF ]);
+        ("(* (* nested *) *) x", [ IDENT("x"); EOF ]);
+        ("(* (* nested // *) *) x", [ IDENT("x"); EOF ]);
         ("X", [ IDENT("X"); EOF ]);
         ("_", [ IDENT("_"); EOF ]);
         ("_12xj", [ IDENT("_12xj"); EOF ]);
@@ -43,7 +50,7 @@ type TestLexerClass() =
     ]
 
     [<TestMethod>]
-    member this.TestLexer() =
+    member _.TestLexer() =
         for (text, expected) in data do
             let actual = List.ofSeq (Parser.lexText text)
             Assert.IsTrue((actual = expected));

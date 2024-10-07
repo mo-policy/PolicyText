@@ -67,6 +67,9 @@ let identOrKeyword (text: string) =
     | "null"    -> NULL
     | _         -> IDENT(text)
 
+let tokenOrComment t  cl b f  =
+    if cl <= 0 then t else f (System.Math.Max(0, cl)) b
+
 }
 
 let whitespace = [' ''\n''\r''\t']*
@@ -95,53 +98,66 @@ let connecting_char = '\Pc'
 let combining_char = '\Mn' | '\Mc'
 let formatting_char = '\Cf'
 
-let ident_start_char = letter_char | '_' | '$'
+let ident_start_char = letter_char | '_' | '$' | '@'
 let ident_char = letter_char | digit_char | connecting_char | combining_char | formatting_char | ['\'' '_']
 let ident = ident_start_char ident_char*
 
-rule policy = parse 
-| ";"                           { SEMI }
-| "|;"                          { BAR_SEMI }
-| ","                           { COMMA }
-| "|,"                          { BAR_COMMA }
-| ":"                           { COLON }
-| "["                           { LBRACKET }
-| "]"                           { RBRACKET }
-| "{"                           { LBRACE }
-| "}"                           { RBRACE }
-| "("                           { LPAREN }
-| ")"                           { RPAREN }
-| "->"                          { RARROW }
-| "|"                           { BAR }
-| "!"                           { BANG }
-| "/"                           { OP_MULTIPLICATION("/") }
-| "*"                           { OP_MULTIPLICATION("*") }
-| "%"                           { OP_MULTIPLICATION("%") }
-| "+"                           { OP_ADDITION("+") }
-| "-"                           { OP_ADDITION("-") }
-| "^"                           { OP_ADDITION("^") }
-| "="                           { EQUAL }
-| "<>"                          { OP_COMPARE("<>") }
-| "<"                           { OP_COMPARE("<") }
-| ">"                           { OP_COMPARE(">") }
-| "<="                          { OP_COMPARE("<=") }
-| "<="                          { OP_COMPARE("<=") }
-| ":="                          { COLON_EQUAL }
-| '\"'                          { lexString (new StringBuilder()) lexbuf }
-| "``"                          { lexIdent (new StringBuilder()) lexbuf }
-| integer                       { tokenInteger lexbuf }
-| number                        { tokenDouble lexbuf }
-| ident                         { identOrKeyword (lexeme lexbuf) }
-| whitespace                    { policy lexbuf }
+rule policy cl = parse 
+| ";"                           { tokenOrComment SEMI cl lexbuf policy }
+| "|;"                          { tokenOrComment BAR_SEMI cl lexbuf policy }
+| ","                           { tokenOrComment COMMA cl lexbuf policy }
+| "|,"                          { tokenOrComment BAR_COMMA cl lexbuf policy }
+| ":"                           { tokenOrComment COLON cl lexbuf policy }
+| "["                           { tokenOrComment LBRACKET cl lexbuf policy }
+| "]"                           { tokenOrComment RBRACKET cl lexbuf policy }
+| "{"                           { tokenOrComment LBRACE cl lexbuf policy }
+| "}"                           { tokenOrComment RBRACE cl lexbuf policy }
+| "("                           { tokenOrComment LPAREN cl lexbuf policy }
+| ")"                           { tokenOrComment RPAREN cl lexbuf policy }
+| "->"                          { tokenOrComment RARROW cl lexbuf policy }
+| "|"                           { tokenOrComment BAR cl lexbuf policy }
+| "!"                           { tokenOrComment BANG cl lexbuf policy }
+| "/"                           { tokenOrComment (OP_MULTIPLICATION("/")) cl lexbuf policy }
+| "*"                           { tokenOrComment (OP_MULTIPLICATION("*")) cl lexbuf policy }
+| "%"                           { tokenOrComment (OP_MULTIPLICATION("%")) cl lexbuf policy }
+| "+"                           { tokenOrComment (OP_ADDITION("+")) cl lexbuf policy }
+| "-"                           { tokenOrComment (OP_ADDITION("-")) cl lexbuf policy }
+| "^"                           { tokenOrComment (OP_ADDITION("^")) cl lexbuf policy }
+| "="                           { tokenOrComment EQUAL cl lexbuf policy }
+| "<>"                          { tokenOrComment (OP_COMPARE("<>")) cl lexbuf policy }
+| "<"                           { tokenOrComment (OP_COMPARE("<")) cl lexbuf policy }
+| ">"                           { tokenOrComment (OP_COMPARE(">")) cl lexbuf policy }
+| "<="                          { tokenOrComment (OP_COMPARE("<=")) cl lexbuf policy }
+| "<="                          { tokenOrComment (OP_COMPARE("<=")) cl lexbuf policy }
+| ":="                          { tokenOrComment COLON_EQUAL cl lexbuf policy }
+| '\"'                          { lexString cl (new StringBuilder()) lexbuf }
+| "``"                          { lexIdent cl (new StringBuilder()) lexbuf }
+| integer                       { if cl <= 0 then tokenInteger lexbuf else policy cl lexbuf }
+| number                        { if cl <= 0 then tokenDouble lexbuf else policy cl lexbuf }
+| ident                         { if cl <= 0 then identOrKeyword (lexeme lexbuf) else policy cl lexbuf }
+| "//"                          { lexComment cl lexbuf }
+| "(*"                          { policy (cl + 1) lexbuf }
+| "*)"                          { policy (cl - 1) lexbuf }
+| whitespace                    { policy cl lexbuf }
 | eof                           { EOF }
 | _                             { failwith ("ParseError" + LexBuffer<_>.LexemeString lexbuf) }
 
-and lexString sb = parse
-| escape                        { sb.Append(escapeChar lexbuf) |> ignore; lexString sb lexbuf }
-| character+                    { sb.Append(lexeme lexbuf) |> ignore; lexString sb lexbuf }
-| '\"'                          { STRING (sb.ToString()) }
+and lexString cl sb = parse
+| escape                        { (if cl <= 0 then sb.Append(escapeChar lexbuf) |> ignore); lexString cl sb lexbuf }
+| character+                    { (if cl <= 0 then sb.Append(lexeme lexbuf) |> ignore); lexString cl sb lexbuf }
+| '\"'                          { if cl <= 0 then STRING (sb.ToString()) else policy cl lexbuf }
+| eof                           { EOF }
+| _                             { if cl <= 0 then failwith "error" else policy cl lexbuf }
 
-and lexIdent sb = parse
+and lexIdent cl sb = parse
 | ( [^'`' '\n' '\r' '\t'] | '`' [^ '`' '\n' '\r' '\t'] )+
-                                { sb.Append(lexeme lexbuf) |> ignore; lexIdent sb lexbuf }
-| "``"                          { IDENT (sb.ToString()) }
+                                { (if cl <= 0 then sb.Append(lexeme lexbuf) |> ignore); lexIdent cl sb lexbuf }
+| "``"                          { if cl <= 0 then IDENT (sb.ToString()) else policy cl lexbuf }
+| eof                           { EOF }
+| _                             { if cl <= 0 then failwith "error" else policy cl lexbuf }
+
+and lexComment cl = parse 
+| [^'\n' '\r' '*']+             { lexComment cl lexbuf }
+| "*)"                          { policy (cl - 1) lexbuf }
+| eof                           { EOF }
+| _                             { policy cl lexbuf }

@@ -9,14 +9,14 @@ module Parser =
         let lexbuf = LexBuffer<char>.FromString(text)
         seq {
             while not(lexbuf.IsPastEndOfStream) do
-                yield (Lexer.policy lexbuf)
+                yield (Lexer.policy 0 lexbuf)
         }
 
     let parseTextDebug text =
         let lexbuf = LexBuffer<char>.FromString(text)
         let lexer : (LexBuffer<char> -> Grammar.token) = 
             fun buf -> 
-                let token = Lexer.policy buf
+                let token = Lexer.policy 0 buf
                 printfn "%A" token
                 token
 
@@ -26,16 +26,16 @@ module Parser =
     let parseTextHashed text = 
         let lexbuf = LexBuffer<char>.FromString(text)
         lexbuf.BufferLocalStore.Add("hashed", true)
-        let expr = Grammar.policyText Lexer.policy lexbuf
+        let expr = Grammar.policyText (Lexer.policy 0) lexbuf
         expr
 
     let parseText text =
         let lexbuf = LexBuffer<char>.FromString(text)
-        let expr = Grammar.policyText Lexer.policy lexbuf
+        let expr = Grammar.policyText (Lexer.policy 0) lexbuf
         expr
 
     let parseFile filename =
         use tr = System.IO.File.OpenText(filename)
         let lexbuf = LexBuffer<char>.FromTextReader(tr)
-        let expr = Grammar.policyText Lexer.policy lexbuf
+        let expr = Grammar.policyText (Lexer.policy 0) lexbuf
         expr
