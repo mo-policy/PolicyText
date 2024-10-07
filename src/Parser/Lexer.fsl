@@ -98,7 +98,7 @@ let connecting_char = '\Pc'
 let combining_char = '\Mn' | '\Mc'
 let formatting_char = '\Cf'
 
-let ident_start_char = letter_char | '_' | '$' | '@'
+let ident_start_char = letter_char | '_' | '$'
 let ident_char = letter_char | digit_char | connecting_char | combining_char | formatting_char | ['\'' '_']
 let ident = ident_start_char ident_char*
 
