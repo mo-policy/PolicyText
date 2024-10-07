@@ -12,6 +12,7 @@
     <Compile Include="TestLexerClass.fs" />
     <Compile Include="TestTAPLClass.fs" />
     <Compile Include="TestTermClass.fs" />
+    <Compile Include="TestHashesClass.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

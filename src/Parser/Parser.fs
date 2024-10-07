@@ -23,6 +23,12 @@ module Parser =
         let expr = Grammar.policyText lexer lexbuf
         expr
 
+    let parseTextHashed text = 
+        let lexbuf = LexBuffer<char>.FromString(text)
+        lexbuf.BufferLocalStore.Add("hashed", true)
+        let expr = Grammar.policyText Lexer.policy lexbuf
+        expr
+
     let parseText text =
         let lexbuf = LexBuffer<char>.FromString(text)
         let expr = Grammar.policyText Lexer.policy lexbuf

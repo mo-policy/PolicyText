@@ -1098,7 +1098,7 @@ let _fsyacc_reductions = lazy [|
                 (
                    (
 # 144 "Grammar.fsy"
-                                                                   Value.Map([]) 
+                                                                   termMap 1 parseState 
                    )
 # 144 "Grammar.fsy"
                  : 'gentype_map));
@@ -1109,7 +1109,7 @@ let _fsyacc_reductions = lazy [|
                 (
                    (
 # 145 "Grammar.fsy"
-                                                                   Value.Map(List.rev _2) 
+                                                                   termMap 2 parseState 
                    )
 # 145 "Grammar.fsy"
                  : 'gentype_map));
@@ -1178,7 +1178,7 @@ let _fsyacc_reductions = lazy [|
                 (
                    (
 # 157 "Grammar.fsy"
-                                                                   Value.List([]) 
+                                                                   termList 1 parseState 
                    )
 # 157 "Grammar.fsy"
                  : 'gentype_list));
@@ -1189,7 +1189,7 @@ let _fsyacc_reductions = lazy [|
                 (
                    (
 # 158 "Grammar.fsy"
-                                                                   Value.List(List.rev _2) 
+                                                                   termList 2 parseState 
                    )
 # 158 "Grammar.fsy"
                  : 'gentype_list));
@@ -1281,7 +1281,7 @@ let _fsyacc_reductions = lazy [|
                 (
                    (
 # 174 "Grammar.fsy"
-                                                                   Value.String(_1) 
+                                                                   valueOrHashed parseState (Value.String(_1)) 
                    )
 # 174 "Grammar.fsy"
                  : 'gentype_constant));
@@ -1292,7 +1292,7 @@ let _fsyacc_reductions = lazy [|
                 (
                    (
 # 175 "Grammar.fsy"
-                                                                   Value.Integer(_1) 
+                                                                   valueOrHashed parseState (Value.Integer(_1)) 
                    )
 # 175 "Grammar.fsy"
                  : 'gentype_constant));
@@ -1303,7 +1303,7 @@ let _fsyacc_reductions = lazy [|
                 (
                    (
 # 176 "Grammar.fsy"
-                                                                   Value.Double(_1) 
+                                                                   valueOrHashed parseState (Value.Double(_1)) 
                    )
 # 176 "Grammar.fsy"
                  : 'gentype_constant));
@@ -1314,7 +1314,7 @@ let _fsyacc_reductions = lazy [|
                 (
                    (
 # 177 "Grammar.fsy"
-                                                                   Value.Boolean(_1) 
+                                                                   valueOrHashed parseState (Value.Boolean(_1)) 
                    )
 # 177 "Grammar.fsy"
                  : 'gentype_constant));
@@ -1324,7 +1324,7 @@ let _fsyacc_reductions = lazy [|
                 (
                    (
 # 178 "Grammar.fsy"
-                                                                   Value.Null 
+                                                                   valueOrHashed parseState (Value.Null) 
                    )
 # 178 "Grammar.fsy"
                  : 'gentype_constant));
