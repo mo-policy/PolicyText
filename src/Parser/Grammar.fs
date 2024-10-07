@@ -663,7 +663,7 @@ let _fsyacc_reductions = lazy [|
                 (
                    (
 # 67 "Grammar.fsy"
-                                                                   termInfix parseState 
+                                                                   termAssignment parseState 
                    )
 # 67 "Grammar.fsy"
                  : 'gentype_infixAssignment));

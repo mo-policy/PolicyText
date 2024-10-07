@@ -64,7 +64,7 @@ application:
     | application atomic                    { termApplication parseState }
 
 infixAssignment:
-    | infix COLON_EQUAL infix               { termInfix parseState }
+    | infix COLON_EQUAL infix               { termAssignment parseState }
     | infixCompare                          { $1 } 
 
 infixCompare:
