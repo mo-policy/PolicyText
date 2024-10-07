@@ -28,10 +28,10 @@ open MobileOwnership.PolicyText.Actions
 %left COLON SEMI BAR_SEMI BAR RARROW
 %nonassoc term_if 
 %nonassoc ELSE ELIF
-%left OP_COMPARE
+%left COLON_EQUAL 
+%left OP_COMPARE EQUAL
 %left OP_ADDITION 
 %left OP_MULTIPLICATION 
-%left COLON_EQUAL 
 
 %%
 
@@ -68,6 +68,7 @@ infixAssignment:
     | infixCompare                          { $1 } 
 
 infixCompare:
+    | infix EQUAL infix                     { termEqual parseState }
     | infix OP_COMPARE infix                { termInfix parseState }
     | infixAddition                         { $1 } 
     
@@ -135,9 +136,9 @@ atomic:
     | list                                  { $1 }
 
 let:
-    | LET term EQUAL term 
+    | LET atomic EQUAL term 
             IN semiSepTerms END             { termLet 1 parseState }
-    | LET REC term EQUAL term 
+    | LET REC atomic EQUAL term 
             IN semiSepTerms END             { termLet 2 parseState }
 
 map:

@@ -279,6 +279,21 @@ module Actions =
             let term = Value.List(terms)
             valueOrHashed parseState term
 
+    let termEqual (parseState: IParseState)  : Value =
+        let infixLeft = parseState.GetInput(1) :?> Value
+        let infixOperator = "="
+        let infixRight = parseState.GetInput(3) :?> Value
+        let term = 
+            Value.Map(
+                [
+                    ("$policy", Value.String("Infix"));
+                    ("operator", Value.String(infixOperator));
+                    ("left", infixLeft);
+                    ("right", infixRight);
+                ]
+            )
+        valueOrHashed parseState term
+
     let termInfix (parseState: IParseState)  : Value =
         let infixLeft = parseState.GetInput(1) :?> Value
         let infixOperator = parseState.GetInput(2) :?> string
