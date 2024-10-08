@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Value.fs" />
     <Compile Include="Actions.fs" />
     <FsYacc Include="Grammar.fsy">
       <OtherFlags>--module MobileOwnership.PolicyText.Grammar -v</OtherFlags>

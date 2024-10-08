@@ -51,3 +51,14 @@ type TestHashesClass() =
                 Assert.IsTrue((actual = expected))
             | _ -> 
                 Assert.Fail()
+
+    [<TestMethod>]
+    member _.TestWriteJSON() =
+        for (term, _, _) in data do
+            use ms = new System.IO.MemoryStream()
+            term.WriteJSON(ms)
+            ms.Position <- 0
+            use sr = new System.IO.StreamReader(ms)
+            let text = sr.ReadToEnd()
+            let parsedTerm = Parser.parseText text
+            Assert.IsTrue((parsedTerm = term))

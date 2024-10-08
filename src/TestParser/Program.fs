@@ -4,5 +4,5 @@ namespace MobileOwnership.PolicyText.TestParser
 
 module Program = 
     let [<EntryPoint>] main _ = 
-        TestLexerClass().TestLexer()
+        TestHashesClass().TestWriteJSON()
         0
