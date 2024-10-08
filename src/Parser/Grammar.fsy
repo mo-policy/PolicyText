@@ -14,7 +14,7 @@ open MobileOwnership.PolicyText.Actions
 %token <int64> INTEGER
 %token <double> DOUBLE 
 %token <bool> BOOLEAN
-%token <string> OP_MULTIPLICATION OP_ADDITION OP_COMPARE
+%token <string> OP_MULTIPLICATION OP_ADDITION OP_COMPARE OP_BOOLEAN
 %token NULL COLON LBRACKET RBRACKET LBRACE RBRACE LPAREN RPAREN
 %token FUN IF THEN ELSE ELIF BEGIN END LET REC IN MATCH WITH WHEN POLICY TRY FINALLY
 %token SEND RECEIVE ON REF 
@@ -29,6 +29,7 @@ open MobileOwnership.PolicyText.Actions
 %nonassoc term_if 
 %nonassoc ELSE ELIF
 %left COLON_EQUAL 
+%left OP_BOOLEAN
 %left OP_COMPARE EQUAL
 %left OP_ADDITION 
 %left OP_MULTIPLICATION 
@@ -65,7 +66,11 @@ application:
 
 infixAssignment:
     | infix COLON_EQUAL infix               { termAssignment parseState }
-    | infixCompare                          { $1 } 
+    | infixBoolean                          { $1 } 
+
+infixBoolean:
+    | infix OP_BOOLEAN infix                { termInfix parseState }
+    | infixCompare                          { $1 }
 
 infixCompare:
     | infix EQUAL infix                     { termEqual parseState }

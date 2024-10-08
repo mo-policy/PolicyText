@@ -42,6 +42,7 @@ type token =
   | OP_MULTIPLICATION of (string)
   | OP_ADDITION of (string)
   | OP_COMPARE of (string)
+  | OP_BOOLEAN of (string)
   | BOOLEAN of (bool)
   | DOUBLE of (double)
   | INTEGER of (int64)
@@ -89,6 +90,7 @@ type tokenId =
     | TOKEN_OP_MULTIPLICATION
     | TOKEN_OP_ADDITION
     | TOKEN_OP_COMPARE
+    | TOKEN_OP_BOOLEAN
     | TOKEN_BOOLEAN
     | TOKEN_DOUBLE
     | TOKEN_INTEGER
@@ -104,6 +106,7 @@ type nonTerminalId =
     | NONTERM_function
     | NONTERM_application
     | NONTERM_infixAssignment
+    | NONTERM_infixBoolean
     | NONTERM_infixCompare
     | NONTERM_infixAddition
     | NONTERM_infixMultiplication
