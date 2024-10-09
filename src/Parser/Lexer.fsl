@@ -60,6 +60,7 @@ let identOrKeyword (text: string) =
     | "send"    -> SEND
     | "receive" -> RECEIVE
     | "on"      -> ON
+    | "as"      -> AS
     | "begin"   -> BEGIN
     | "end"     -> END
     | "false"   -> BOOLEAN(false)
@@ -103,6 +104,7 @@ let ident_char = letter_char | digit_char | connecting_char | combining_char | f
 let ident = ident_start_char ident_char*
 
 rule policy cl = parse 
+| "."                           { tokenOrComment DOT cl lexbuf policy }
 | ";"                           { tokenOrComment SEMI cl lexbuf policy }
 | "|;"                          { tokenOrComment BAR_SEMI cl lexbuf policy }
 | ","                           { tokenOrComment COMMA cl lexbuf policy }

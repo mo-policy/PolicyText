@@ -15,6 +15,8 @@ type token =
   | RECEIVE
   | ON
   | REF
+  | AS
+  | DOT
   | FUN
   | IF
   | THEN
@@ -63,6 +65,8 @@ type tokenId =
     | TOKEN_RECEIVE
     | TOKEN_ON
     | TOKEN_REF
+    | TOKEN_AS
+    | TOKEN_DOT
     | TOKEN_FUN
     | TOKEN_IF
     | TOKEN_THEN
@@ -110,6 +114,7 @@ type nonTerminalId =
     | NONTERM_infixCompare
     | NONTERM_infixAddition
     | NONTERM_infixMultiplication
+    | NONTERM_asPattern
     | NONTERM_annotation
     | NONTERM_if
     | NONTERM_ifElse

@@ -17,7 +17,7 @@ open MobileOwnership.PolicyText.Actions
 %token <string> OP_MULTIPLICATION OP_ADDITION OP_COMPARE OP_BOOLEAN
 %token NULL COLON LBRACKET RBRACKET LBRACE RBRACE LPAREN RPAREN
 %token FUN IF THEN ELSE ELIF BEGIN END LET REC IN MATCH WITH WHEN POLICY TRY FINALLY
-%token SEND RECEIVE ON REF 
+%token SEND RECEIVE ON REF AS DOT
 %token RARROW BAR BANG EQUAL COLON_EQUAL
 %token SEMI BAR_SEMI COMMA BAR_COMMA
 %token EOF
@@ -28,6 +28,8 @@ open MobileOwnership.PolicyText.Actions
 %left COLON SEMI BAR_SEMI BAR RARROW
 %nonassoc term_if 
 %nonassoc ELSE ELIF
+%right AS
+%right DOT
 %left COLON_EQUAL 
 %left OP_BOOLEAN
 %left OP_COMPARE EQUAL
@@ -54,7 +56,7 @@ term:
 
 infix:
     | infixAssignment                       { $1 }
-    | function { $1 }
+    | function                              { $1 }
 
 function:
     | FUN term RARROW function              { termFunction parseState }
@@ -83,6 +85,10 @@ infixAddition:
 
 infixMultiplication:
     | infix OP_MULTIPLICATION infix         { termInfix parseState }
+    | asPattern                             { $1 }
+
+asPattern:
+    | infix AS IDENT                        { termAsPattern parseState }
 
 annotation:
     | term COLON IDENT                      { termAnnotation parseState }
@@ -175,6 +181,7 @@ semiSepTerms:
 
 lookup:
     | IDENT                                 { termLookup parseState }
+    | atomic DOT IDENT                      { termLookupMember parseState }
 
 constant: 
     | STRING                                { valueOrHashed parseState (Value.String($1)) }
@@ -182,3 +189,4 @@ constant:
     | DOUBLE                                { valueOrHashed parseState (Value.Double($1)) }
     | BOOLEAN                               { valueOrHashed parseState (Value.Boolean($1)) }
     | NULL                                  { valueOrHashed parseState (Value.Null) }
+    | LPAREN RPAREN                         { valueOrHashed parseState (Value.Null) }

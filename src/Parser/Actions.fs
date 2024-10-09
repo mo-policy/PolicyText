@@ -43,13 +43,13 @@ module Actions =
 
     let termAnnotation (parseState: IParseState) : Value = 
         let annotationTerm = parseState.GetInput(1) :?> Value
-        let annotationType = parseState.GetInput(3) :?> Value
+        let annotationType = parseState.GetInput(3) :?> string
         let term = 
             Value.Map(
                 [
                     ("$policy", Value.String("Annotation"));
                     ("term", annotationTerm);
-                    ("type", annotationType);
+                    ("type", Value.String(annotationType));
                 ]
             )
         valueOrHashed parseState term
@@ -148,16 +148,15 @@ module Actions =
             valueOrHashed parseState term
 
     let termEqual (parseState: IParseState)  : Value =
-        let infixLeft = parseState.GetInput(1) :?> Value
-        let infixOperator = "="
-        let infixRight = parseState.GetInput(3) :?> Value
+        let equalLeft = parseState.GetInput(1) :?> Value
+        let equalRight = parseState.GetInput(3) :?> Value
         let term = 
             Value.Map(
                 [
                     ("$policy", Value.String("Infix"));
-                    ("operator", Value.String(infixOperator));
-                    ("left", infixLeft);
-                    ("right", infixRight);
+                    ("operator", Value.String("="));
+                    ("left", equalLeft);
+                    ("right", equalRight);
                 ]
             )
         valueOrHashed parseState term
@@ -173,6 +172,32 @@ module Actions =
                     ("operator", Value.String(infixOperator));
                     ("left", infixLeft);
                     ("right", infixRight);
+                ]
+            )
+        valueOrHashed parseState term
+
+    let termLookupMember(parseState: IParseState)  : Value =
+        let lookupTerm = parseState.GetInput(1) :?> Value
+        let lookupMember = parseState.GetInput(3) :?> string
+        let term = 
+            Value.Map(
+                [
+                    ("$policy", Value.String("LookupMember"));
+                    ("term", lookupTerm);
+                    ("member", Value.String(lookupMember));
+                ]
+            )
+        valueOrHashed parseState term
+
+    let termAsPattern(parseState: IParseState)  : Value =
+        let asTerm = parseState.GetInput(1) :?> Value
+        let asName = parseState.GetInput(3) :?> string
+        let term = 
+            Value.Map(
+                [
+                    ("$policy", Value.String("AsPattern"));
+                    ("term", asTerm);
+                    ("name", Value.String(asName));
                 ]
             )
         valueOrHashed parseState term
