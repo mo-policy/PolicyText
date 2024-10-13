@@ -260,13 +260,13 @@ module Actions =
 
     let termReceive (kind: int) (parseState: IParseState) : Value = 
         let rulesIndex = if kind = 1 then 5 else 6
-        let receiveTerm = parseState.GetInput(3) :?> Value
+        let receiveChannel = parseState.GetInput(3) :?> Value
         let receiveRules = parseState.GetInput(rulesIndex) :?> Value list
         let term = 
             Value.Map(
                 [
                     ("$policy", Value.String("Receive"));
-                    ("term", receiveTerm);
+                    ("channel", receiveChannel);
                     ("rules", Value.List(List.rev receiveRules));
                 ]
             )
