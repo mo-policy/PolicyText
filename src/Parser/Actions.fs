@@ -114,11 +114,27 @@ module Actions =
                 let letPattern = parseState.GetInput(3) :?> Value
                 let letTerm = parseState.GetInput(5) :?> Value
                 let letIn = parseState.GetInput(7) :?> Value list
+                let fixFunction = 
+                    Value.Map(
+                        [
+                            ("$policy", Value.String("Function"));
+                            ("pattern", letPattern);
+                            ("term", letTerm);
+                        ]
+                    )
+
+                let fixTerm = 
+                    Value.Map(
+                        [
+                            ("$policy", Value.String("Fix"));
+                            ("term", fixFunction);
+                        ]
+                    )
                 Value.Map(
                     [
-                        ("$policy", Value.String("LetRec"));
+                        ("$policy", Value.String("Let"));
                         ("pattern", letPattern);
-                        ("term", letTerm);
+                        ("term", fixTerm);
                         ("in", oneOrSequence letIn);
                     ]
                 )
